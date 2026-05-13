@@ -1,0 +1,221 @@
+/* ========================================
+   PAGE TRANSITION
+======================================== */
+
+.page-transition{
+
+    animation:fadeIn .45s ease;
+}
+
+@keyframes fadeIn{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(10px);
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+    }
+}
+
+/* ========================================
+   PAGE EXIT
+======================================== */
+
+.page-exit{
+
+    opacity:0;
+
+    transform:translateY(10px);
+
+    transition:all .25s ease;
+}
+
+/* ========================================
+   CARD ANIMATION
+======================================== */
+
+.login-card,
+.register-card{
+
+    animation:cardShow .55s ease;
+
+    transition:
+        transform .3s ease,
+        box-shadow .3s ease;
+}
+
+@keyframes cardShow{
+
+    from{
+
+        opacity:0;
+
+        transform:
+            translateY(20px)
+            scale(.96);
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+.login-card:hover,
+.register-card:hover{
+
+    transform:
+        translateY(-6px)
+        scale(1.01);
+
+    box-shadow:
+        0 35px 70px rgba(0,0,0,.16);
+}
+
+/* ========================================
+   BUTTON / INPUT
+======================================== */
+
+.login-btn,
+.register-btn,
+.social-btn,
+.custom-input,
+a{
+
+    transition:all .25s ease;
+}
+/* ========================================
+   FLOATING BACKGROUND
+======================================== */
+
+.bg-circle{
+
+    animation:floatAnimation 8s ease-in-out infinite;
+}
+
+.bg-blue{
+
+    animation-delay:2s;
+}
+
+.bg-pink{
+
+    animation-delay:4s;
+}
+
+@keyframes floatAnimation{
+
+    0%{
+
+        transform:
+            translateY(0px)
+            scale(1);
+    }
+
+    50%{
+
+        transform:
+            translateY(-20px)
+            scale(1.05);
+    }
+
+    100%{
+
+        transform:
+            translateY(0px)
+            scale(1);
+    }
+}
+/* ========================================
+   PAGE LOADED
+======================================== */
+
+body{
+
+    opacity:1;
+
+    transition:
+        opacity .4s ease,
+        transform .4s ease;
+}
+
+body.page-loaded{
+
+    opacity:1;
+}
+
+/* ========================================
+   PAGE EXIT
+======================================== */
+
+body.page-exit{
+
+    opacity:0;
+
+    transform:translateY(10px);
+}
+/* ========================================
+   ALERT AUTO HIDE
+======================================== */
+
+.auto-hide-alert{
+
+    overflow:hidden;
+
+    animation:
+        alertFadeIn .3s ease,
+        alertFadeOut .5s ease 2.5s forwards;
+}
+
+/* FADE IN */
+
+@keyframes alertFadeIn{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(-10px);
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+    }
+}
+
+/* FADE OUT */
+
+@keyframes alertFadeOut{
+
+    to{
+
+        opacity:0;
+
+        transform:translateY(-10px);
+
+        margin:0;
+
+        padding-top:0;
+        padding-bottom:0;
+
+        height:0;
+
+        min-height:0;
+
+        border:0;
+    }
+}

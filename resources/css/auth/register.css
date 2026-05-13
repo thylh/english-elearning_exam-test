@@ -1,0 +1,82 @@
+/* ========================================
+   REGISTER PAGE
+======================================== */
+
+.register-page{
+
+    min-height:100vh;
+
+    background:linear-gradient(
+        135deg,
+        #EFF6FF 0%,
+        #FAF5FF 45%,
+        #FDF2F8 100%
+    );
+
+    position:relative;
+
+    overflow:hidden;
+}
+
+.register-wrapper{
+
+    min-height:100vh;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+}
+
+/* ========================================
+   CARD
+======================================== */
+
+.register-card{
+
+    width:100%;
+
+    max-width:460px;
+
+    max-height:700px;
+
+    background:rgba(255,255,255,.72);
+
+    backdrop-filter:blur(12px);
+
+    border-radius:24px;
+
+    padding:12px 38px;
+
+    box-shadow:
+        0 20px 45px rgba(0,0,0,.12);
+
+    position:relative;
+
+    z-index:2;
+}
+
+.register-title{
+
+    font-size:26px;
+
+    font-weight:700;
+
+    text-align:center;
+
+    color:#1F2937;
+
+    margin-bottom:7px;
+}
+
+.register-subtitle{
+
+    text-align:center;
+
+    color:#6B7280;
+
+    font-size:13px;
+
+    margin-bottom:12px;
+}

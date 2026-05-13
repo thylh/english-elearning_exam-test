@@ -1,0 +1,81 @@
+/* ========================================
+   LOGIN PAGE
+======================================== */
+
+.login-page{
+
+    min-height:100vh;
+
+    background:linear-gradient(
+        135deg,
+        #EFF6FF 0%,
+        #FAF5FF 45%,
+        #FDF2F8 100%
+    );
+
+    position:relative;
+
+    overflow:hidden;
+}
+
+.login-wrapper{
+
+    min-height:100vh;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+}
+
+/* ========================================
+   CARD
+======================================== */
+
+.login-card{
+
+    width:100%;
+
+    max-width:460px;
+
+    max-height:700px;
+
+    background:rgba(255,255,255,.72);
+    backdrop-filter:blur(12px);
+
+    border-radius:24px;
+
+    padding:15px 38px;
+
+    box-shadow:
+        0 20px 45px rgba(0,0,0,.12);
+
+    position:relative;
+
+    z-index:2;
+}
+
+.login-title{
+
+    font-size:26px;
+
+    font-weight:700;
+
+    text-align:center;
+
+    color:#1F2937;
+
+    margin-bottom:7px;
+}
+
+.login-subtitle{
+
+    text-align:center;
+
+    color:#6B7280;
+
+    font-size:13px;
+
+    margin-bottom:20px;
+}

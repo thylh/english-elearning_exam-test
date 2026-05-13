@@ -1,0 +1,6 @@
+@import 'bootstrap/dist/css/bootstrap.min.css';
+@import './global.css';
+@import './animation.css';
+@import './auth/auth.css';
+@import './auth/login.css';
+@import './auth/register.css';

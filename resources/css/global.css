@@ -1,0 +1,24 @@
+/* ========================================
+   GLOBAL
+======================================== */
+
+body{
+
+    font-family:'Be Vietnam Pro', sans-serif;
+
+    margin:0;
+    padding:0;
+
+    overflow:hidden;
+}
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media(max-width:991px){
+
+    body{
+        overflow:auto;
+    }
+}
