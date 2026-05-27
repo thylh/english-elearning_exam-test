@@ -31,6 +31,17 @@ Route::get('/dashboard', function () {
 })->middleware('auth');
 
 // =========================
+// ENGLISH FOR YOU TEMPLATE
+// =========================
+
+Route::view('/english', 'ielts.index');
+Route::view('/practice', 'ielts.practice');
+Route::view('/reading', 'ielts.reading');
+Route::view('/listening', 'ielts.listening');
+Route::view('/writing', 'ielts.writing');
+Route::view('/speaking', 'ielts.speaking');
+
+// =========================
 // PASSWORD RESET
 // =========================
 

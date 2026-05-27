@@ -70,7 +70,7 @@
 
                                     <input type="text" name="name" value="{{ old('name') }}"
                                         class="form-control custom-input @error('name') is-invalid @enderror"
-                                        placeholder="Nhập họ và tên">
+                                        placeholder="Nhập họ và tên" required>
 
                                 </div>
 
@@ -97,7 +97,7 @@
 
                                     <input type="email" name="email" value="{{ old('email') }}"
                                         class="form-control custom-input @error('email') is-invalid @enderror"
-                                        placeholder="Nhập email">
+                                        placeholder="Nhập email" required>
 
                                 </div>
 
@@ -124,7 +124,7 @@
 
                                     <input type="password" name="password"
                                         class="form-control custom-input @error('password') is-invalid @enderror"
-                                        placeholder="Nhập mật khẩu">
+                                        placeholder="Nhập mật khẩu" required>
 
                                 </div>
 
@@ -150,9 +150,15 @@
                                     </span>
 
                                     <input type="password" name="password_confirmation" class="form-control custom-input"
-                                        placeholder="Nhập lại mật khẩu">
+                                        placeholder="Nhập lại mật khẩu" required>
 
                                 </div>
+
+                                @error('password_confirmation')
+                                    <small class="text-danger">
+                                        {{ $message }}
+                                    </small>
+                                @enderror
 
                             </div>
 

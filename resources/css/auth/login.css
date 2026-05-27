@@ -79,3 +79,73 @@
 
     margin-bottom:20px;
 }
+/* ========================================
+   INPUT WRAPPER
+======================================== */
+
+.input-wrapper{
+    position: relative;
+}
+
+.input-icon{
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+    pointer-events: none;
+    line-height: 1;
+}
+
+/* ========================================
+   CUSTOM INPUT
+======================================== */
+
+.custom-input{
+    height: 50px;
+    border-radius: 12px;
+    border: 2px solid #E5E7EB;
+    background: #F9FAFB;
+
+    padding-left: 46px !important;
+    padding-right: 16px !important;
+
+    font-size: 14px;
+}
+
+/* ========================================
+   BOOTSTRAP INVALID FIX
+======================================== */
+
+.custom-input.is-invalid,
+.was-validated .custom-input:invalid{
+
+    border-color: #dc3545 !important;
+
+    background-image: none !important;
+
+    padding-right: 16px !important;
+
+    box-shadow: none !important;
+}
+
+
+.form-control.is-invalid{
+    background-image: none !important;
+}
+
+/* ========================================
+   ERROR TEXT
+======================================== */
+
+.invalid-feedback,
+.text-danger{
+
+    display: block;
+
+    margin-top: 6px;
+
+    font-size: 13px;
+
+    font-weight: 500;
+}

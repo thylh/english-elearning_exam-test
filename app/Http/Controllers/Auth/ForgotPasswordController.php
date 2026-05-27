@@ -46,7 +46,7 @@ class ForgotPasswordController extends Controller
     }
 
     // SHOW RESET FORM
-    public function showResetForm($token)
+    public function showResetForm(string $token)
     {
         return view('auth.reset-password', compact('token'));
     }

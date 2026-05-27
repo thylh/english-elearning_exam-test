@@ -139,6 +139,7 @@
 .input-wrapper{
 
     position:relative;
+    display:block;
 }
 
 .input-icon{
@@ -153,6 +154,7 @@
     z-index:2;
 
     font-size:13px;
+    line-height:1;
 }
 
 .custom-input{
@@ -166,8 +168,22 @@
     background:#F9FAFB;
 
     padding-left:45px;
+    padding-right:16px;
 
     font-size:14px;
+    box-sizing:border-box;
+}
+
+.custom-input.is-invalid,
+.form-control.is-invalid{
+    border-color: #dc3545 !important;
+    background-color: #F9FAFB !important;
+    background-image: none !important;
+    background-position: center right !important;
+    background-repeat: no-repeat !important;
+    padding-left: 45px !important;
+    padding-right: 16px !important;
+    box-shadow: none !important;
 }
 
 .custom-input:focus{

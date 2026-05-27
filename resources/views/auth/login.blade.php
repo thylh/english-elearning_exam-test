@@ -51,14 +51,20 @@
                         </p>
 
                         <!-- ERROR -->
-                        @if(session('error'))
-                            <div class="alert alert-danger auto-hide-alert">
-                                {{ session('error') }}
-                            </div>
-                        @endif
+                        <div id="loginAlert">
+                            @if(session('error'))
+                                <div class="alert alert-danger auto-hide-alert">
+                                    {{ session('error') }}
+                                </div>
+                            @elseif(session('success'))
+                                <div class="alert alert-success auto-hide-alert">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
+                        </div>
 
                         <!-- FORM -->
-                        <form method="POST" action="{{ route('login') }}">
+                        <form id="loginForm" method="POST" action="{{ route('login') }}">
 
                             @csrf
 
