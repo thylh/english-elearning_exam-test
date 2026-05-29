@@ -38,8 +38,9 @@
                     <div class="register-card mx-auto">
 
                         <!-- LOGO -->
-                        <div class="logo-box mx-auto">
-                            📘
+                        <div class="logo-box mx-auto text-center">
+                            <i class="fa-solid fa-graduation-cap"
+                                style="font-size: 32px; color: #fff; margin-left: 3px; display: block;"></i>
                         </div>
 
                         <h1 class="register-title">

@@ -104,8 +104,8 @@
 
     background:linear-gradient(
         135deg,
-        #9333EA 0%,
-        #2563EB 100%
+        #d7b899 0%,
+        #8d6e63 100%
     );
 
     display:flex;
@@ -131,7 +131,7 @@
 
     font-weight:500;
 
-    color:#374151;
+    color:#4e342e;
 
     margin-bottom:8px;
 }
@@ -215,8 +215,8 @@
 
     background:linear-gradient(
         90deg,
-        #9333EA 0%,
-        #2563EB 100%
+        #d7b899 0%,
+        #8d6e63 100%
     );
 
     color:white;
@@ -238,7 +238,7 @@
     color:white;
 
     box-shadow:
-        0 8px 20px rgba(147,51,234,.25);
+        0 8px 20px rgba(141,110,99,.25);
 }
 
 /* ========================================
@@ -314,7 +314,7 @@
 
     padding:0 14px;
 
-    color:#6B7280;
+    color:#8d6e63;
 
     font-size:13px;
 }
@@ -356,7 +356,7 @@
 
     text-decoration:none;
 
-    color:#9333EA;
+    color:#5d4037;
 
     font-weight:600;
 }
