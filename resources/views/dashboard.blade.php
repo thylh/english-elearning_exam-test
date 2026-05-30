@@ -32,7 +32,7 @@
         <!-- MENU -->
         <nav class="menu">
 
-            <a href="/">
+            <a href="/dashboard">
 
                 <i class="fa-solid fa-house"></i>
 

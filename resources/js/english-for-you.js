@@ -53,3 +53,28 @@ if(textarea && wordCount){
     });
 
 }
+
+// PRACTICE PANEL SWITCHING
+const skillButtons = document.querySelectorAll(".practice-sidebar .menu-title[data-skill]");
+const skillPanels = document.querySelectorAll(".skill-panel");
+
+if(skillButtons.length && skillPanels.length){
+
+    skillButtons.forEach(button => {
+
+        button.addEventListener("click", () => {
+
+            const skill = button.dataset.skill;
+
+            skillButtons.forEach(btn => btn.closest(".menu-skill").classList.remove("active-skill"));
+            button.closest(".menu-skill").classList.add("active-skill");
+
+            skillPanels.forEach(panel => {
+                panel.classList.toggle("active", panel.dataset.panel === skill);
+            });
+
+        });
+
+    });
+
+}

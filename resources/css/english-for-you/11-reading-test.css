@@ -1,0 +1,385 @@
+/* ================= TEST LAYOUT ================= */
+.test-layout{
+    display:flex;
+    min-height:100vh;
+    background:#f6f1ea;
+    font-family:Arial;
+}
+
+/* TOOL */
+.tool-sidebar{
+    width:120px;
+    background:#f0e6db;
+    padding:20px 10px;
+    border-right:1px solid #ddd;
+}
+
+.tool-sidebar h2{
+    font-size:22px;
+    margin-bottom:20px;
+    color:#5d4037;
+}
+
+.tool-sidebar button{
+    width:100%;
+    margin-bottom:15px;
+    border:none;
+    background:white;
+    padding:18px 10px;
+    border-radius:15px;
+    color:#2e7d32;
+    font-size:16px;
+}
+
+/* LEFT */
+.reading-left{
+    width:50%;
+    background:white;
+    padding:40px;
+    overflow:auto;
+    line-height:1.8;
+}
+
+.reading-left h1{
+    margin-bottom:25px;
+    color:#263238;
+}
+
+.reading-left p{
+    margin-bottom:20px;
+    font-size:20px;
+}
+
+.reading-left ul{
+    padding-left:25px;
+}
+
+.reading-left li{
+    margin-bottom:15px;
+    font-size:20px;
+}
+
+/* RIGHT */
+.reading-right{
+    width:50%;
+    background:#f7f3ee;
+    border-left:1px solid #ddd;
+    padding:30px;
+}
+
+/* TOP */
+.reading-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:35px;
+}
+
+.reading-timer{
+    background:#28a745;
+    color:white;
+    padding:12px 25px;
+    border-radius:25px;
+    font-size:22px;
+    font-weight:bold;
+}
+
+.top-buttons{
+    display:flex;
+    gap:15px;
+}
+
+.top-buttons button{
+    border:none;
+    background:white;
+    padding:12px 20px;
+    border-radius:25px;
+    font-size:17px;
+}
+
+/* QUESTION */
+.reading-question{
+    background:white;
+    border-radius:25px;
+    padding:30px;
+}
+
+.reading-question h2{
+    margin-bottom:20px;
+    color:#374151;
+}
+
+.reading-question h3{
+    margin-bottom:25px;
+    line-height:1.6;
+}
+
+.reading-question p{
+    margin-bottom:20px;
+}
+
+.reading-question label{
+    display:block;
+    margin:18px 0;
+    font-size:20px;
+}
+
+/* NUMBER */
+.question-number{
+    display:flex;
+    gap:12px;
+    margin-top:30px;
+}
+
+.question-number button{
+    width:50px;
+    height:50px;
+    border:none;
+    border-radius:50%;
+    background:#dcedc8;
+    color:#2e7d32;
+    font-size:18px;
+    font-weight:bold;
+}
+
+/* WRITING */
+.writing-layout{
+    display:flex;
+    min-height:100vh;
+    background:#f5f0ea;
+}
+
+/* LEFT */
+.writing-left{
+    width:45%;
+    padding:30px;
+    overflow:auto;
+}
+
+.question-box-writing{
+    background:white;
+    border:1px solid #bbb;
+    padding:25px;
+    margin-bottom:30px;
+}
+
+.question-box-writing p{
+    line-height:1.8;
+    font-size:22px;
+    margin-bottom:20px;
+}
+
+.question-box-writing button{
+    border:none;
+    background:none;
+    font-size:20px;
+}
+
+.writing-left img{
+    width:100%;
+    border-radius:20px;
+    margin-bottom:40px;
+}
+
+/* GUIDE */
+.writing-guide{
+    text-align:center;
+}
+
+.writing-guide h1{
+    margin-bottom:20px;
+    color:#374151;
+}
+
+.writing-guide h3{
+    margin-bottom:20px;
+}
+
+/* RIGHT */
+.writing-right{
+    width:55%;
+    background:white;
+    padding:25px;
+    border-left:1px solid #ddd;
+}
+
+/* HEADER */
+.writing-header{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:25px;
+}
+
+/* SECTION */
+.writing-section{
+    margin-bottom:30px;
+}
+
+.writing-section h3{
+    margin-bottom:15px;
+}
+
+.writing-section textarea{
+    width:100%;
+    height:140px;
+    border:1px solid #ddd;
+    border-radius:15px;
+    padding:20px;
+    resize:none;
+    font-size:18px;
+}
+
+/* FOOTER */
+.writing-footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.time-box span{
+    color:#666;
+}
+
+.score-btn{
+    border:none;
+    background:#e0e0e0;
+    padding:18px 35px;
+    border-radius:30px;
+    font-size:18px;
+}
+
+/* SPEAKING */
+.record-speaking{
+    margin-top:30px;
+    border:none;
+    background:#8d6e63;
+    color:white;
+    padding:16px 30px;
+    border-radius:20px;
+    font-size:18px;
+}
+
+/* ================= READING PAGE ================= */
+.reading-page{
+    display:flex;
+    min-height:100vh;
+    background:#f5efe7;
+}
+
+/* TEST */
+.reading-test{
+    display:flex;
+    margin-top:60px;
+    border-radius:30px;
+    overflow:hidden;
+    background:white;
+    box-shadow:
+    0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* LEFT */
+.reading-left{
+    width:50%;
+    padding:40px;
+    line-height:1.9;
+    border-right:1px solid #ddd;
+}
+
+.reading-left h1{
+    font-size:38px;
+    margin-bottom:30px;
+    color:#3e2723;
+}
+
+.reading-left p{
+    font-size:22px;
+    margin-bottom:25px;
+    color:#444;
+}
+
+/* RIGHT */
+.reading-right{
+    width:50%;
+    background:#fcfaf7;
+    padding:35px;
+}
+
+/* TIMER */
+.reading-top{
+    display:flex;
+    justify-content:center;
+    margin-bottom:30px;
+}
+
+.reading-timer{
+    background:#32b643;
+    color:white;
+    padding:15px 35px;
+    border-radius:30px;
+    font-size:24px;
+    font-weight:bold;
+}
+
+/* QUESTION */
+.reading-question{
+    background:white;
+    border-radius:25px;
+    padding:35px;
+    box-shadow:
+    0 3px 10px rgba(0,0,0,0.05);
+}
+
+.reading-question h2{
+    font-size:32px;
+    margin-bottom:20px;
+    color:#374151;
+}
+
+.reading-question p{
+    font-size:22px;
+    margin-bottom:25px;
+}
+
+.reading-question label{
+    display:block;
+    margin:20px 0;
+    font-size:22px;
+    color:#444;
+}
+
+.reading-question input{
+    margin-right:12px;
+    transform:scale(1.3);
+}
+
+/* NUMBER */
+.question-number{
+    display:flex;
+    gap:15px;
+    margin-top:30px;
+    justify-content:center;
+}
+
+.question-number button{
+    width:55px;
+    height:55px;
+    border:none;
+    border-radius:50%;
+    background:#dcedc8;
+    color:#2e7d32;
+    font-size:20px;
+    font-weight:bold;
+}
+
+/* RECORD BUTTON */
+.record-btn{
+    margin-top:30px;
+    width:100%;
+    padding:20px;
+    border:none;
+    border-radius:20px;
+    background:#9b7768;
+    color:white;
+    font-size:24px;
+    cursor:pointer;
+}

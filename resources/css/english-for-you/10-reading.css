@@ -1,0 +1,266 @@
+/* ================= PRACTICE PAGE ================= */
+.practice-layout{
+    display:flex;
+    min-height:100vh;
+    background:#f5f0ea;
+    font-family:Arial;
+}
+
+/* ================= SIDEBAR ================= */
+.practice-sidebar{
+    width:320px;
+    background:#f3ece5;
+    padding:25px;
+    border-right:1px solid #ddd;
+}
+
+.filter-icon{
+    font-size:24px;
+    margin-bottom:25px;
+    color:#6d4c41;
+}
+
+.promo-card,
+.builder-card{
+    background:white;
+    border-radius:25px;
+    padding:25px;
+    margin-bottom:25px;
+    box-shadow:
+    0 4px 10px rgba(0,0,0,0.05);
+}
+
+.builder-card{
+    border:2px solid #c7a58b;
+}
+
+.promo-card h3,
+.builder-card h3{
+    color:#5d4037;
+    margin-bottom:10px;
+    font-size:24px;
+}
+
+.promo-card p,
+.builder-card p{
+    color:#666;
+    line-height:1.6;
+}
+
+/* MENU */
+.menu-skill{
+    background:white;
+    border-radius:25px;
+    margin-bottom:25px;
+    overflow:hidden;
+    border:2px solid transparent;
+}
+
+.active-skill{
+    border:2px solid #8d6e63;
+}
+
+.menu-title{
+    background:#e8ddd2;
+    padding:18px 25px;
+    font-size:22px;
+    color:#5d4037;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    font-weight:bold;
+    text-decoration:none;
+    border:none;
+    width:100%;
+    text-align:left;
+    cursor:pointer;
+}
+
+.menu-title:hover,
+.menu-title:focus{
+    text-decoration:none;
+    outline:none;
+}
+
+.menu-title span,
+.menu-title i{
+    color:inherit;
+}
+
+.skill-panel{
+    display:none;
+}
+
+.skill-panel.active{
+    display:block;
+}
+
+.menu-skill.active-skill .menu-title{
+    background:#d9c2b3;
+}
+
+.menu-skill label{
+    display:block;
+    padding:18px 25px;
+    font-size:20px;
+}
+
+/* ================= CONTENT ================= */
+.practice-content{
+    flex:1;
+    padding:30px;
+}
+
+/* TOP */
+.practice-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.practice-tabs{
+    display:flex;
+    gap:15px;
+}
+
+.practice-tabs button{
+    padding:14px 28px;
+    border:none;
+    border-radius:15px;
+    background:white;
+    font-size:18px;
+}
+
+.active-tab{
+    border:3px solid #4caf50;
+    color:#2e7d32;
+    font-weight:bold;
+}
+
+/* SEARCH */
+.practice-search{
+    background:white;
+    border-radius:35px;
+    display:flex;
+    align-items:center;
+    padding:0 20px;
+    width:500px;
+    height:60px;
+}
+
+.practice-search i{
+    color:#5d4037;
+    font-size:20px;
+}
+
+.practice-search input{
+    flex:1;
+    border:none;
+    outline:none;
+    padding:0 15px;
+    font-size:18px;
+    background:none;
+}
+
+.practice-search button{
+    background:#d7c1aa;
+    border:none;
+    padding:12px 25px;
+    border-radius:25px;
+    color:#5d4037;
+    font-weight:bold;
+}
+
+/* HISTORY */
+.history-link{
+    margin-bottom:30px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:20px;
+}
+
+.history-link a{
+    color:#1565c0;
+    text-decoration:none;
+}
+
+/* GRID */
+.practice-grid{
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(480px,1fr));
+    gap:30px;
+}
+
+/* CARD */
+.practice-card{
+    background:white;
+    border-radius:25px;
+    padding:20px;
+    display:flex;
+    gap:20px;
+    position:relative;
+    box-shadow:
+    0 4px 10px rgba(0,0,0,0.05);
+}
+
+.highlight-card{
+    border:3px solid #ff7043;
+}
+
+.card-tag{
+    position:absolute;
+    top:0;
+    left:0;
+    background:#3e2723;
+    color:white;
+    padding:10px 20px;
+    border-radius:
+    25px 0 20px 0;
+    font-size:16px;
+}
+
+.practice-card img{
+    width:180px;
+    height:140px;
+    object-fit:cover;
+    border-radius:15px;
+    margin-top:35px;
+}
+
+.card-content{
+    flex:1;
+    margin-top:35px;
+}
+
+.band-tag{
+    display:inline-block;
+    background:#ff7043;
+    color:white;
+    padding:8px 16px;
+    border-radius:20px;
+    margin-bottom:15px;
+    font-size:14px;
+}
+
+.card-content h3{
+    color:#1565c0;
+    margin-bottom:15px;
+}
+
+.card-content p{
+    line-height:1.7;
+    color:#444;
+    margin-bottom:20px;
+}
+
+.card-content a{
+    background:#8d6e63;
+    color:white;
+    text-decoration:none;
+    padding:12px 25px;
+    border-radius:25px;
+    display:inline-block;
+}

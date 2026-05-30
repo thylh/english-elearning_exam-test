@@ -1,0 +1,70 @@
+/* SECTION */
+.section-title{
+    font-size:35px;
+    margin-bottom:35px;
+}
+
+.course-section{
+    padding:50px 70px;
+}
+
+/* GRID */
+.course-grid{
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(250px,1fr));
+
+    gap:25px;
+}
+
+/* CARD */
+.course-card{
+    background:white;
+
+    border-radius:22px;
+
+    padding:30px;
+
+    box-shadow:0 2px 10px rgba(0,0,0,0.08);
+}
+
+.course-icon{
+    width:70px;
+    height:70px;
+
+    border-radius:18px;
+
+    background:#f1e3d3;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:28px;
+
+    margin-bottom:20px;
+}
+
+.course-card p{
+    margin:15px 0 25px;
+    line-height:1.7;
+}
+
+.course-card a{
+    background:#8d6e63;
+    color:white;
+
+    text-decoration:none;
+
+    padding:12px 18px;
+
+    border-radius:10px;
+}
+
+/* FOOTER */
+.footer{
+    background:#d7b899;
+    text-align:center;
+    padding:25px;
+    margin-top:60px;
+}
