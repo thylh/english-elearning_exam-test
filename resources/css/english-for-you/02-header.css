@@ -65,6 +65,30 @@
     gap:20px;
 }
 
+/* GREETING */
+.greeting{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:10px 20px;
+
+    background:rgba(255, 255, 255, 0.3);
+
+    border-radius:25px;
+
+    color:#5d4037;
+
+    font-size:16px;
+
+    font-weight:500;
+}
+
+.greeting strong{
+    font-weight:600;
+    margin-left:5px;
+}
+
 /* SEARCH */
 .search-box{
     width:240px;
@@ -174,3 +198,10 @@
 .dropdown a:hover{
     background:#f5ebe1;
 }
+
+.dropdown hr{
+    margin:8px 0;
+    border:none;
+    border-top:1px solid #e8d7c3;
+}
+

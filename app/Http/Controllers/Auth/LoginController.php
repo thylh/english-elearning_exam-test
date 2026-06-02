@@ -59,11 +59,15 @@ class LoginController extends Controller
 
             $request->session()->regenerate();
 
+            $redirect = Auth::user()->role === 'instructor'
+                ? '/instructor/exams'
+                : '/dashboard';
+
             return response()->json([
 
                 'success' => true,
 
-                'redirect' => '/dashboard'
+                'redirect' => $redirect
             ]);
         }
 

@@ -46,12 +46,12 @@ Route::view('/speaking', 'ielts.speaking');
 // =========================
 use App\Http\Controllers\Instructor\ExamController;
 
-Route::middleware(['auth'])->prefix('instructor')->name('instructor.')->group(function(){
+Route::middleware(['auth', 'role:instructor'])->prefix('instructor')->name('instructor.')->group(function(){
     Route::get('/exams', [ExamController::class, 'index'])->name('exams.index');
-    Route::get('/exams/create', [ExamController::class, 'create'])->name('exams.create');
     Route::post('/exams', [ExamController::class, 'store'])->name('exams.store');
-    Route::get('/exams/{exam}/edit', [ExamController::class, 'edit'])->name('exams.edit');
     Route::put('/exams/{exam}', [ExamController::class, 'update'])->name('exams.update');
+    Route::patch('/exams/{exam}/classify', [ExamController::class, 'classify'])->name('exams.classify');
+    Route::patch('/exams/{exam}/publish', [ExamController::class, 'togglePublish'])->name('exams.publish');
     Route::delete('/exams/{exam}', [ExamController::class, 'destroy'])->name('exams.destroy');
 });
 

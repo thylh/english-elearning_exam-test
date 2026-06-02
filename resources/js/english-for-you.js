@@ -54,6 +54,16 @@ if(textarea && wordCount){
 
 }
 
+// CLASSIFICATION PANEL TOGGLE
+const classifyToggle = document.querySelector('.classify-toggle');
+const classificationPanel = document.querySelector('.classification-panel');
+
+if(classifyToggle && classificationPanel){
+    classifyToggle.addEventListener('click', () => {
+        classificationPanel.style.display = classificationPanel.style.display === 'none' ? 'block' : 'none';
+    });
+}
+
 // PRACTICE PANEL SWITCHING
 const skillButtons = document.querySelectorAll(".practice-sidebar .menu-title[data-skill]");
 const skillPanels = document.querySelectorAll(".skill-panel");

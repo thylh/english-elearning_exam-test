@@ -8,7 +8,7 @@ use App\Models\User;
 class Exam extends Model
 {
     protected $fillable = [
-        'title', 'slug', 'type', 'band', 'description', 'duration_minutes', 'published', 'user_id'
+        'title', 'slug', 'type', 'subtype', 'category', 'band', 'description', 'duration_minutes', 'published', 'user_id'
     ];
 
     /**
