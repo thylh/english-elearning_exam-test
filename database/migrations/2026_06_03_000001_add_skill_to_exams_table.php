@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('exams', function (Blueprint $table) {
-            $table->string('subtype')->nullable()->after('category')->comment('For practice: "single" or "full"');
+            $table->string('skill')->nullable()->after('subtype')->comment('For practice: reading, listening, writing, or speaking');
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('exams', function (Blueprint $table) {
-            $table->dropColumn('subtype');
+            $table->dropColumn('skill');
         });
     }
 };

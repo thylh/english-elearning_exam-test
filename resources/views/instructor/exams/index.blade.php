@@ -18,7 +18,6 @@
         <div class="hero-content">
             <span class="hero-tag">INSTRUCTOR DASHBOARD</span>
             <h1>Quản lý đề thi</h1>
-            <p>Danh sách đề hiện tại và thao tác tạo, chỉnh sửa, xóa đề.</p>
         </div>
     </section>
 
@@ -33,7 +32,7 @@
                     .exam-list-layout {
                         display: block;
                         background: #f5f0ea;
-                        padding: 20px 0;
+                        padding: 20px;
                     }
 
                     .exam-topbar {
@@ -41,7 +40,7 @@
                         align-items: center;
                         justify-content: space-between;
                         gap: 16px;
-                        margin-bottom: 30px;
+                        /* margin-bottom: 0px; */
                         flex-wrap: wrap;
                     }
 
@@ -189,7 +188,6 @@
                     </div>
                     <div>
                         <h2>Danh sách đề</h2>
-                        <p>Giao diện đề hiển thị giống practice, chỉ giữ lại icon filter.</p>
                     </div>
                     <button id="openCreateModal" type="button" class="btn btn-main">Tạo đề mới</button>
                 </div>
@@ -223,14 +221,18 @@
                                         <p>{{ Str::limit($exam->description ?? 'Không có mô tả', 120) }}</p>
                                     </div>
                                     <div class="card-actions">
+                                        <a href="{{ route('instructor.exams.questions.index', $exam) }}"
+                                            class="btn btn-outline-secondary"
+                                            style="font-size:12px;padding:6px 12px;">Nội dung</a>
                                         <button type="button" class="btn btn-outline-primary classify-btn" data-id="{{ $exam->id }}"
                                             data-type="{{ $exam->type }}" data-band="{{ $exam->band }}"
                                             data-category="{{ $exam->category }}" data-subtype="{{ $exam->subtype }}"
-                                            style="font-size:12px;padding:6px 12px;">Phân loại</button>
+                                            data-skill="{{ $exam->skill }}" style="font-size:12px;padding:6px 12px;">Phân
+                                            loại</button>
                                         <button type="button"
-                                            class="btn {{ $exam->published ? 'btn-success' : 'btn-warning' }} publish-btn"
+                                            class="btn {{ $exam->published ? 'btn-danger' : 'btn-success' }} publish-btn"
                                             data-id="{{ $exam->id }}" data-published="{{ $exam->published ? 1 : 0 }}"
-                                            style="font-size:12px;padding:6px 12px;">{{ $exam->published ? 'Published' : 'Draft' }}</button>
+                                            style="font-size:12px;padding:6px 12px;">{{ $exam->published ? 'Unpublish' : 'Publish' }}</button>
                                     </div>
                                 </div>
                             </div>
@@ -304,6 +306,17 @@
                                     </select>
                                 </div>
 
+                                <div class="mb-3" id="skillDiv" style="display:none;">
+                                    <label class="form-label">Kỹ năng (Practice)</label>
+                                    <select id="skillSelect" name="skill" class="form-control">
+                                        <option value="">Chọn kỹ năng</option>
+                                        <option value="reading">Reading</option>
+                                        <option value="listening">Listening</option>
+                                        <option value="writing">Writing</option>
+                                        <option value="speaking">Speaking</option>
+                                    </select>
+                                </div>
+
                                 <div class="mb-3">
                                     <label class="form-label">Band</label>
                                     <input type="text" name="band" class="form-control">
@@ -330,6 +343,8 @@
                     const createEditModal = new bootstrap.Modal(document.getElementById('createEditModal'), {});
                     const typeSelect = document.getElementById('typeSelect');
                     const subtypeDiv = document.getElementById('subtypeDiv');
+                    const skillDiv = document.getElementById('skillDiv');
+                    const skillSelect = document.getElementById('skillSelect');
                     const createEditForm = document.getElementById('createEditForm');
                     const createEditModalLabel = document.getElementById('createEditModalLabel');
                     const editTitle = document.getElementById('editTitle');
@@ -399,8 +414,12 @@
                     typeSelect.addEventListener('change', function () {
                         if (this.value === 'practice') {
                             subtypeDiv.style.display = 'block';
+                            skillDiv.style.display = 'block';
                         } else {
                             subtypeDiv.style.display = 'none';
+                            skillDiv.style.display = 'none';
+                            document.querySelector('select[name="subtype"]').value = '';
+                            skillSelect.value = '';
                         }
                     });
 
@@ -412,12 +431,14 @@
                             const band = this.dataset.band;
                             const category = this.dataset.category;
                             const subtype = this.dataset.subtype;
+                            const skill = this.dataset.skill;
 
                             document.getElementById('examId').value = examId;
                             typeSelect.value = type || '';
                             document.querySelector('input[name="band"]').value = band || '';
                             document.querySelector('input[name="category"]').value = category || '';
                             document.querySelector('select[name="subtype"]').value = subtype || '';
+                            skillSelect.value = skill || '';
 
                             // Trigger change to show/hide subtype
                             typeSelect.dispatchEvent(new Event('change'));
@@ -429,11 +450,22 @@
                     // Handle classify form submit
                     document.getElementById('classifyForm').addEventListener('submit', function (e) {
                         e.preventDefault();
+                        if (!typeSelect.value) {
+                            alert('Vui lòng chọn loại đề.');
+                            typeSelect.focus();
+                            return;
+                        }
+                        if (typeSelect.value === 'practice' && !skillSelect.value) {
+                            alert('Vui lòng chọn kỹ năng.');
+                            skillSelect.focus();
+                            return;
+                        }
+
                         const examId = document.getElementById('examId').value;
                         const formData = new FormData(this);
 
                         fetch(`/instructor/exams/${examId}/classify`, {
-                            method: 'PATCH',
+                            method: 'POST',
                             headers: {
                                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                                 'X-Requested-With': 'XMLHttpRequest',
@@ -466,10 +498,11 @@
 
                             if (confirm(`Có chắc muốn ${action} đề này không?`)) {
                                 const formData = new FormData();
+                                formData.append('_method', 'PATCH');
                                 formData.append('published', isPublished ? 0 : 1);
 
                                 fetch(`/instructor/exams/${examId}/publish`, {
-                                    method: 'PATCH',
+                                    method: 'POST',
                                     headers: {
                                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                                         'X-Requested-With': 'XMLHttpRequest',

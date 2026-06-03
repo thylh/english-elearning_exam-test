@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Exam;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Str;
 
 class ExamController extends Controller
@@ -73,11 +75,43 @@ class ExamController extends Controller
     public function classify(Request $request, Exam $exam)
     {
         $data = $request->validate([
-            'type' => 'required|string|in:practice,exam',
-            'subtype' => 'nullable|string|in:single,full',
+            'type' => ['nullable', Rule::in(['practice', 'exam'])],
+            'subtype' => ['nullable', Rule::in(['single', 'full'])],
+            'skill' => ['nullable', Rule::in(['reading', 'listening', 'writing', 'speaking'])],
             'category' => 'nullable|string|max:255',
             'band' => 'nullable|string|max:50',
         ]);
+
+        $type = $data['type'] ?? null;
+
+        if (!$type && ($request->filled('subtype') || $request->filled('skill'))) {
+            $type = 'practice';
+        }
+
+        if (!$type) {
+            throw ValidationException::withMessages([
+                'type' => 'Vui lòng chọn loại đề.',
+            ]);
+        }
+
+        $data['type'] = $type;
+
+        if ($data['type'] === 'practice') {
+            if (!$data['subtype']) {
+                throw ValidationException::withMessages([
+                    'subtype' => 'Vui lòng chọn dạng đề cho Practice.',
+                ]);
+            }
+
+            if (!$data['skill']) {
+                throw ValidationException::withMessages([
+                    'skill' => 'Vui lòng chọn kỹ năng cho Practice.',
+                ]);
+            }
+        } else {
+            $data['subtype'] = null;
+            $data['skill'] = null;
+        }
 
         $exam->update($data);
 
@@ -89,8 +123,36 @@ class ExamController extends Controller
 
     public function togglePublish(Request $request, Exam $exam)
     {
+        // Check conditions before publishing
         $published = $request->input('published', 0);
-        $exam->update(['published' => (bool)$published]);
+        
+        if (in_array($published, [1, '1', true], true)) {
+            // Validating before publishing
+            if (!$exam->title) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Vui lòng nhập tiêu đề đề trước khi publish.',
+                ], 422);
+            }
+            
+            if (!$exam->description) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Vui lòng nhập mô tả đề trước khi publish.',
+                ], 422);
+            }
+            
+            if (!$exam->type) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Vui lòng phân loại đề trước khi publish.',
+                ], 422);
+            }
+        }
+
+        // Convert string "0"/"1" to boolean properly
+        $published = in_array($published, [1, '1', true], true) ? 1 : 0;
+        $exam->update(['published' => $published]);
 
         return response()->json([
             'success' => true,

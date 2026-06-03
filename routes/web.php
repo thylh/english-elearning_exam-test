@@ -45,6 +45,7 @@ Route::view('/speaking', 'ielts.speaking');
 // INSTRUCTOR: Exam management
 // =========================
 use App\Http\Controllers\Instructor\ExamController;
+use App\Http\Controllers\Instructor\ExamQuestionController;
 
 Route::middleware(['auth', 'role:instructor'])->prefix('instructor')->name('instructor.')->group(function(){
     Route::get('/exams', [ExamController::class, 'index'])->name('exams.index');
@@ -53,6 +54,10 @@ Route::middleware(['auth', 'role:instructor'])->prefix('instructor')->name('inst
     Route::patch('/exams/{exam}/classify', [ExamController::class, 'classify'])->name('exams.classify');
     Route::patch('/exams/{exam}/publish', [ExamController::class, 'togglePublish'])->name('exams.publish');
     Route::delete('/exams/{exam}', [ExamController::class, 'destroy'])->name('exams.destroy');
+    Route::get('/exams/{exam}/questions', [ExamQuestionController::class, 'index'])->name('exams.questions.index');
+    Route::post('/exams/{exam}/questions', [ExamQuestionController::class, 'store'])->name('exams.questions.store');
+    Route::put('/exams/{exam}/questions/{question}', [ExamQuestionController::class, 'update'])->name('exams.questions.update');
+    Route::delete('/exams/{exam}/questions/{question}', [ExamQuestionController::class, 'destroy'])->name('exams.questions.destroy');
 });
 
 // =========================

@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('exams', function (Blueprint $table) {
-            $table->string('subtype')->nullable()->after('category')->comment('For practice: "single" or "full"');
+        Schema::table('exam_questions', function (Blueprint $table) {
+            $table->string('section_skill')->nullable()->after('exam_id');
+            $table->unsignedTinyInteger('part_number')->nullable()->after('section_skill');
         });
     }
 
@@ -21,8 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('exams', function (Blueprint $table) {
-            $table->dropColumn('subtype');
+        Schema::table('exam_questions', function (Blueprint $table) {
+            $table->dropColumn(['section_skill', 'part_number']);
         });
     }
 };
