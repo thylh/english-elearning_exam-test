@@ -125,8 +125,10 @@ class ExamController extends Controller
     {
         // Check conditions before publishing
         $published = $request->input('published', 0);
-        
-        if (in_array($published, [1, '1', true], true)) {
+        $force = $request->boolean('force');
+
+        // If not forcing, validate basics before allowing publish
+        if (in_array($published, [1, '1', true], true) && !$force) {
             // Validating before publishing
             if (!$exam->title) {
                 return response()->json([

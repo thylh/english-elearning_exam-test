@@ -222,8 +222,7 @@
                                     </div>
                                     <div class="card-actions">
                                         <a href="{{ route('instructor.exams.questions.index', $exam) }}"
-                                            class="btn btn-outline-secondary"
-                                            style="font-size:12px;padding:6px 12px;">Nội dung</a>
+                                            class="btn btn-outline-secondary" style="font-size:12px;padding:6px 12px;">Nội dung</a>
                                         <button type="button" class="btn btn-outline-primary classify-btn" data-id="{{ $exam->id }}"
                                             data-type="{{ $exam->type }}" data-band="{{ $exam->band }}"
                                             data-category="{{ $exam->category }}" data-subtype="{{ $exam->subtype }}"
@@ -500,6 +499,13 @@
                                 const formData = new FormData();
                                 formData.append('_method', 'PATCH');
                                 formData.append('published', isPublished ? 0 : 1);
+
+                                // Ask whether to force publish (bypass validation) for demo
+                                let force = false;
+                                if (!isPublished) {
+                                    force = confirm('Bạn muốn publish (bỏ qua các kiểm tra bắt buộc)? OK = Có, Cancel = Không');
+                                    if (force) formData.append('force', 1);
+                                }
 
                                 fetch(`/instructor/exams/${examId}/publish`, {
                                     method: 'POST',

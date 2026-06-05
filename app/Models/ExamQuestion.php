@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property array<array-key, mixed>|null $options
  * @property string|null $correct_answer
  * @property string|null $explanation
+ * @property string|null $prompt_attachment
  * @property int $order
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -46,6 +47,7 @@ class ExamQuestion extends Model
         'options',
         'correct_answer',
         'explanation',
+        'prompt_attachment',
         'order',
     ];
 

@@ -35,7 +35,8 @@ Route::get('/dashboard', function () {
 // =========================
 
 Route::view('/english', 'ielts.index');
-Route::view('/practice', 'ielts.practice');
+use App\Http\Controllers\PracticeController;
+Route::get('/practice', [PracticeController::class, 'index']);
 Route::view('/reading', 'ielts.reading');
 Route::view('/listening', 'ielts.listening');
 Route::view('/writing', 'ielts.writing');
