@@ -62,10 +62,12 @@
         </div> --}}
 
         {{-- Toolbar: global skill/part selector for exam or full-practice --}}
-        <div class="d-flex gap-2 align-items-center mb-2">
-                        <strong>Skill:</strong>
-                        <span class="badge bg-primary ms-2">{{ $skillLabels[$exam->skill] ?? $exam->skill }}</span>
-                    </div>
+        @if($exam->type === 'practice' && $exam->subtype === 'single')
+            <div class="d-flex gap-2 align-items-center mb-2">
+                <strong>Skill:</strong>
+                    <span class="badge bg-primary ms-2">{{ $skillLabels[$exam->skill] ?? $exam->skill }}</span>
+            </div>
+        @endif
         @php
             $showToolbar = $exam->type === 'exam' || ($exam->type === 'practice' && $exam->subtype === 'full');
         @endphp

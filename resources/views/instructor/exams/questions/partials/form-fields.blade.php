@@ -37,10 +37,14 @@
         </select>
     </div>
 @endif
-
+<div class="mt-3">
+    <label class="form-label">Văn bản đi kèm</label>
+    <textarea name="prompt_text" class="form-control" rows="4"
+        placeholder="Văn bản (passage) nếu có">{{ old('prompt_text', $question?->prompt_text) }}</textarea>
+</div>
 <div class="mt-3">
     <label class="form-label">Nội dung câu hỏi</label>
-    <textarea name="question_text" class="form-control" rows="4"
+    <textarea name="question_text" class="form-control" rows="2"
         required>{{ old('question_text', $question?->question_text) }}</textarea>
 </div>
 

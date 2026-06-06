@@ -93,6 +93,7 @@ class ExamQuestionController extends Controller
             'part_number' => 'nullable|integer|min:1|max:4',
             'question_text' => 'required|string',
             'prompt_attachment' => 'nullable|file|max:10240|mimes:jpg,jpeg,png,gif,mp3,wav,mp4,pdf',
+            'prompt_text' => 'nullable|string',
             'question_type' => ['required', Rule::in(['multiple_choice', 'checkbox', 'text', 'writing', 'speaking'])],
             'correct_answer' => 'nullable|string',
             'explanation' => 'nullable|string',

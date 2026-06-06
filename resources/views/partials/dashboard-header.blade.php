@@ -45,21 +45,9 @@
                     <i class="fa-solid fa-book"></i>
                     Practice
                 </a>
-                <a href="/reading">
-                    <i class="fa-solid fa-book-open"></i>
-                    Reading
-                </a>
-                <a href="/listening">
-                    <i class="fa-solid fa-headphones"></i>
-                    Listening
-                </a>
-                <a href="/writing">
-                    <i class="fa-solid fa-pen"></i>
-                    Writing
-                </a>
-                <a href="/speaking">
-                    <i class="fa-solid fa-microphone"></i>
-                    Speaking
+                <a href="/exam-test">
+                    <i class="fa-solid fa-clipboard-list"></i>
+                    Exam test
                 </a>
             @endif
         @endauth

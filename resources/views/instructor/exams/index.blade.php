@@ -257,7 +257,7 @@
             </div>
 
             <form method="GET" action="{{ route('instructor.exams.index') }}"
-                class="exam-filter-panel {{ $filterOpen ? 'open' : '' }}">
+                class="exam-filter-panel {{ $filterOpen ? 'open' : '' }}" style="margin-bottom: 20px;">
                 <div class="filter-row">
                     <div class="filter-group">
                         <strong>Loại đề</strong>
@@ -516,7 +516,7 @@
                     })
                         .then(res => {
                             if (!res.ok) {
-                                return res.text().then(text => { throw new Error(text || 'Lỗi máy chủ'); });
+                                return res.json().then(data => { throw new Error(data?.message || 'Lỗi máy chủ'); });
                             }
                             return res.json();
                         })
@@ -595,7 +595,7 @@
                     })
                         .then(res => {
                             if (!res.ok) {
-                                return res.text().then(text => { throw new Error(text || 'Lỗi máy chủ'); });
+                                return res.json().then(data => { throw new Error(data?.message || 'Lỗi máy chủ'); });
                             }
                             return res.json();
                         })
@@ -621,13 +621,6 @@
                             formData.append('_method', 'PATCH');
                             formData.append('published', isPublished ? 0 : 1);
 
-                            // Ask whether to force publish (bypass validation) for demo
-                            let force = false;
-                            if (!isPublished) {
-                                force = confirm('Bạn muốn publish (bỏ qua các kiểm tra bắt buộc)? OK = Có, Cancel = Không');
-                                if (force) formData.append('force', 1);
-                            }
-
                             fetch(`/instructor/exams/${examId}/publish`, {
                                 method: 'POST',
                                 headers: {
@@ -639,7 +632,7 @@
                             })
                                 .then(res => {
                                     if (!res.ok) {
-                                        return res.text().then(text => { throw new Error(text || 'Lỗi máy chủ'); });
+                                        return res.json().then(data => { throw new Error(data?.message || 'Lỗi máy chủ'); });
                                     }
                                     return res.json();
                                 })

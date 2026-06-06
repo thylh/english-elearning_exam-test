@@ -150,38 +150,60 @@ class ExamController extends Controller
 
     public function togglePublish(Request $request, Exam $exam)
     {
-        // Check conditions before publishing
         $published = $request->input('published', 0);
         $force = $request->boolean('force');
 
-        // If not forcing, validate basics before allowing publish
         if (in_array($published, [1, '1', true], true) && !$force) {
-            // Validating before publishing
             if (!$exam->title) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Vui lòng nhập tiêu đề đề trước khi publish.',
                 ], 422);
             }
-            
+
             if (!$exam->description) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Vui lòng nhập mô tả đề trước khi publish.',
                 ], 422);
             }
-            
+
+            if (!$exam->type && $exam->subtype && $exam->skill) {
+                $exam->type = 'practice';
+            }
+
             if (!$exam->type) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Vui lòng phân loại đề trước khi publish.',
                 ], 422);
             }
+
+            if ($exam->type === 'practice') {
+                if (!$exam->subtype) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Vui lòng chọn dạng đề Practice trước khi publish.',
+                    ], 422);
+                }
+
+                if (!$exam->skill) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Vui lòng chọn kỹ năng Practice trước khi publish.',
+                    ], 422);
+                }
+            }
         }
 
-        // Convert string "0"/"1" to boolean properly
         $published = in_array($published, [1, '1', true], true) ? 1 : 0;
-        $exam->update(['published' => $published]);
+        $updateData = ['published' => $published];
+
+        if ($published && !$force && !$exam->type && $exam->subtype && $exam->skill) {
+            $updateData['type'] = 'practice';
+        }
+
+        $exam->update($updateData);
 
         return response()->json([
             'success' => true,

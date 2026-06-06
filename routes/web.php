@@ -37,6 +37,10 @@ Route::get('/dashboard', function () {
 Route::view('/english', 'ielts.index');
 use App\Http\Controllers\PracticeController;
 Route::get('/practice', [PracticeController::class, 'index']);
+use App\Http\Controllers\ExamPublicController;
+Route::get('/exam-test', [ExamPublicController::class, 'index'])->name('exam.index');
+Route::get('/exams/{exam}/take', [ExamPublicController::class, 'take'])->name('exams.take');
+Route::post('/exams/{exam}/submit', [ExamPublicController::class, 'submit'])->name('exams.submit');
 Route::view('/reading', 'ielts.reading');
 Route::view('/listening', 'ielts.listening');
 Route::view('/writing', 'ielts.writing');

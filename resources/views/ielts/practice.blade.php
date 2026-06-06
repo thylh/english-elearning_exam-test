@@ -25,8 +25,10 @@
         <aside class="practice-sidebar">
 
             <!-- FILTER -->
-            <div class="filter-icon">
-
+            <div class="filter-icon" style="display: flex;justify-content: space-between;">
+                <a href="/dashboard" class="back-link"
+                    style="left:16px;top:16px;font-size:20px;color:#483737;text-decoration:none;"><i
+                        class="fa-solid fa-arrow-left"></i></a>
                 <i class="fa-solid fa-filter"></i>
 
             </div>
@@ -266,15 +268,15 @@
                         @else
                             @foreach($exams as $exam)
                                 <div class="practice-card {{ $exam->published ? 'highlight-card' : '' }}">
-                                    <div class="card-tag">{{ ucfirst($exam->subtype ?? $exam->type) }}</div>
+                                    <div class="card-tag">{{ ucfirst($exam->category) }}</div>
                                     <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1200">
                                     <div class="card-content">
                                         <div class="band-tag">{{ $exam->band ? 'Band ' . $exam->band : 'Practice' }}</div>
                                         <h3>{{ $exam->title }}</h3>
                                         <p>{{ 
-                                                        Str::limit($exam->description ?? 'Không có mô tả', 120)
-                                                    }}</p>
-                                        <a href="{{ route('instructor.exams.questions.index', $exam) }}">Xem nội dung</a>
+                                                                                                                                                                                            Str::limit($exam->description ?? 'Không có mô tả', 120)
+                                                                                                                                                                                        }}</p>
+                                        <a href="{{ route('exams.take', $exam) }}">Làm bài</a>
                                     </div>
                                 </div>
                             @endforeach

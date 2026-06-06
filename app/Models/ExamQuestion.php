@@ -48,6 +48,7 @@ class ExamQuestion extends Model
         'correct_answer',
         'explanation',
         'prompt_attachment',
+        'prompt_text',
         'order',
     ];
 

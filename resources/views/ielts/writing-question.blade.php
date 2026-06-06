@@ -18,6 +18,7 @@
 
     <div class="writing-layout">
 
+
         <!-- LEFT -->
         <div class="writing-left">
 
@@ -67,14 +68,10 @@
         <div class="writing-right">
 
             <div class="writing-header">
-
-
-                <span>
-
+                <div style="display:flex;justify-content:space-between;align-items:center">
                     <span class="word-count">Word count: 0</span>
-
-                </span>
-
+                    <div id="timer"></div>
+                </div>
             </div>
 
             <!-- INTRO -->
@@ -125,11 +122,7 @@
 
                 </div>
 
-                <button class="score-btn">
-
-                    Chấm điểm
-
-                </button>
+                <button id="submit-btn" class="score-btn">Nộp bài</button>
 
             </div>
 
@@ -140,3 +133,56 @@
 </body>
 
 </html>
+
+<script>
+    (function () {
+        const duration = {{ $exam->duration_minutes ?? 30 }} * 60;
+        let remaining = duration;
+        const timerEl = document.getElementById('timer');
+        const submitBtn = document.getElementById('submit-btn');
+
+        function format(ms) {
+            const m = Math.floor(ms / 60).toString().padStart(2, '0');
+            const s = (ms % 60).toString().padStart(2, '0');
+            return `${m}:${s}`;
+        }
+
+        timerEl.textContent = format(remaining);
+        const iv = setInterval(() => {
+            remaining--;
+            timerEl.textContent = format(remaining);
+            if (remaining <= 0) {
+                clearInterval(iv);
+                document.getElementById('submit-btn').click();
+            }
+        }, 1000);
+
+        submitBtn.addEventListener('click', function () {
+            // For writing, submit the textarea content as answer for the first question id if exists
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `{{ route('exams.submit', $exam) }}`;
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'answers';
+            const data = {};
+            // collect any textarea fields inside writing-left/right
+            document.querySelectorAll('textarea').forEach((ta, idx) => {
+                const qid = ta.getAttribute('data-qid') || ('w' + idx);
+                data[qid] = ta.value;
+            });
+            const hidden = document.createElement('input');
+            hidden.type = 'hidden';
+            hidden.name = 'answers';
+            hidden.value = JSON.stringify(data);
+            form.appendChild(hidden);
+            const token = document.createElement('input');
+            token.type = 'hidden';
+            token.name = '_token';
+            token.value = '{{ csrf_token() }}';
+            form.appendChild(token);
+            document.body.appendChild(form);
+            form.submit();
+        });
+    })();
+</script>
