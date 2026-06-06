@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Instructor;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Exam;
 use Illuminate\Validation\Rule;
@@ -12,10 +13,36 @@ use Illuminate\Support\Str;
 
 class ExamController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $exams = Exam::orderBy('created_at', 'desc')->paginate(20);
-        return view('instructor.exams.index', compact('exams'));
+        $query = Exam::query();
+
+        $types = Arr::wrap($request->input('type', []));
+        $subtypes = Arr::wrap($request->input('subtype', []));
+        $skills = Arr::wrap($request->input('skill', []));
+        $band = trim((string) $request->input('band', ''));
+
+        if (!empty($types)) {
+            $query->whereIn('type', $types);
+        }
+
+        if (!empty($subtypes)) {
+            $query->whereIn('subtype', $subtypes);
+        }
+
+        if (!empty($skills)) {
+            $query->whereIn('skill', $skills);
+        }
+
+        if ($band !== '') {
+            $query->where('band', 'like', "%{$band}%");
+        }
+
+        $exams = $query->orderBy('created_at', 'desc')
+            ->paginate(20)
+            ->appends($request->query());
+
+        return view('instructor.exams.index', compact('exams', 'types', 'subtypes', 'skills', 'band'));
     }
 
     public function store(Request $request)

@@ -34,12 +34,31 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-// AUTO HIDE ALERT
-setTimeout(() => {
+// AUTO HIDE ALERT - Setup for all alerts
+function setupAutoHideAlerts() {
+    document.querySelectorAll('.auto-hide-alert').forEach(alert => {
+        // Skip if already being monitored
+        if (alert.dataset.autoHideSetup) return;
+        
+        alert.dataset.autoHideSetup = 'true';
+        
+        setTimeout(() => {
+            alert.style.opacity = '1';
+            alert.style.transition = 'opacity 0.3s ease';
+            
+            setTimeout(() => {
+                alert.style.opacity = '0';
+                setTimeout(() => alert.remove(), 300);
+            }, 2700); // Dismiss after 3 seconds total
+        }, 0);
+    });
+}
 
-    document.querySelector('.auto-hide-alert')?.remove();
+// Run on page load
+document.addEventListener('DOMContentLoaded', setupAutoHideAlerts);
 
-}, 3000);
+// Also run immediately for alerts already in DOM
+setupAutoHideAlerts();
 
 // AJAX LOGIN
 const loginForm = document.getElementById('loginForm');
@@ -114,14 +133,14 @@ if (loginForm) {
             if (alertBox) {
 
                 alertBox.innerHTML = `
-                    <div class="alert alert-danger auto-hide-alert">
+                    <div class="alert alert-danger auto-hide-alert alert-dismissible fade show" role="alert">
+                        <i class="fa-solid fa-circle-xmark me-2"></i>
                         ${data.message || 'Login failed'}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 `;
 
-                setTimeout(() => {
-                    alertBox.innerHTML = '';
-                }, 3000);
+                setupAutoHideAlerts();
             }
 
         } catch (error) {
@@ -157,14 +176,14 @@ if (loginForm) {
                 if (alertBox) {
 
                     alertBox.innerHTML = `
-                        <div class="alert alert-danger auto-hide-alert">
+                        <div class="alert alert-danger auto-hide-alert alert-dismissible fade show" role="alert">
+                            <i class="fa-solid fa-circle-xmark me-2"></i>
                             Something went wrong
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
                     `;
 
-                    setTimeout(() => {
-                        alertBox.innerHTML = '';
-                    }, 3000);
+                    setupAutoHideAlerts();
                 }
             }
 

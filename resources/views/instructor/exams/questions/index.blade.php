@@ -18,7 +18,7 @@
     $questionTypes = [
         'multiple_choice' => 'Trắc nghiệm 1 đáp án',
         'checkbox' => 'Chọn nhiều đáp án',
-        'text' => 'Listening',
+        'text' => 'Listening key',
         'writing' => 'Writing response',
         'speaking' => 'Speaking prompt',
     ];
@@ -34,26 +34,13 @@
     <section class="hero">
         <div class="hero-content">
             <span class="hero-tag">QUESTION MANAGEMENT</span>
-            <h1>Nội dung đề thi</h1>
-            <p>{{ $exam->title }}</p>
+            {{-- <h1>Nội dung đề thi</h1> --}}
+            <p>Đề - {{ $exam->title }}</p>
         </div>
     </section>
 
     <div class="container my-4">
-        @if(session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
-
-        @if($errors->any())
-            <div class="alert alert-danger">
-                <strong>Không thể lưu câu hỏi.</strong>
-                <ul class="mb-0">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+        @include('partials.alert')
 
         <div class="d-flex justify-content-between align-items-center gap-3 mb-3 flex-wrap">
             <a href="{{ route('instructor.exams.index') }}" class="btn btn-outline-secondary">
@@ -75,6 +62,10 @@
         </div> --}}
 
         {{-- Toolbar: global skill/part selector for exam or full-practice --}}
+        <div class="d-flex gap-2 align-items-center mb-2">
+                        <strong>Skill:</strong>
+                        <span class="badge bg-primary ms-2">{{ $skillLabels[$exam->skill] ?? $exam->skill }}</span>
+                    </div>
         @php
             $showToolbar = $exam->type === 'exam' || ($exam->type === 'practice' && $exam->subtype === 'full');
         @endphp
@@ -83,20 +74,20 @@
             <div class="mb-3">
                 @if($exam->type === 'exam')
                     <div class="d-flex gap-2 align-items-center mb-2">
-                        <strong>Chọn skill:</strong>
+                        <strong>Skill:</strong>
                         @foreach($skillLabels as $value => $label)
                             <button type="button" class="btn btn-outline-primary btn-sm skill-btn" data-skill="{{ $value }}">{{ $label }}</button>
                         @endforeach
                     </div>
                 @else
                     <div class="d-flex gap-2 align-items-center mb-2">
-                        <strong>Skill đã chọn:</strong>
+                        <strong>Skill:</strong>
                         <span class="badge bg-primary ms-2">{{ $skillLabels[$exam->skill] ?? $exam->skill }}</span>
                     </div>
                 @endif
 
                 <div class="d-flex gap-2 align-items-center">
-                    <strong>Chọn part:</strong>
+                    <strong>Part:</strong>
                     @for($part = 1; $part <= 4; $part++)
                         <button type="button" class="btn btn-outline-secondary btn-sm part-btn" data-part="{{ $part }}">Part {{ $part }}</button>
                     @endfor
@@ -129,8 +120,8 @@
             </div>
 
             <div class="col-lg-8">
-                <div id="questionSelectionMessage" class="alert alert-info d-none">
-                    Chọn skill và part để xem danh sách câu hỏi.
+                <div id="questionSelectionMessage" >
+                    Hãy chọn skill và part.
                 </div>
                 @forelse($questions as $question)
                     <div class="question-panel mb-3" data-section-skill="{{ $question->section_skill }}" data-part-number="{{ $question->part_number }}">
@@ -175,9 +166,9 @@
                         </form>
                     </div>
                 @empty
-                    <div class="alert alert-info">
+                    {{-- <div class="alert alert-info">
                         Đề này chưa có câu hỏi. Thêm câu hỏi đầu tiên ở form bên trái.
-                    </div>
+                    </div> --}}
                 @endforelse
             </div>
         </div>
@@ -272,6 +263,7 @@
             // }
         }
 
+        const questionTypeStorageKey = 'instructorExamLastQuestionType';
         let activeSkill = '{{ old('section_skill') }}' || null;
         let activePart = '{{ old('part_number') }}' || null;
 
@@ -371,11 +363,11 @@
             if (message) {
                 if (!showList) {
                     message.textContent = pageExamType === 'exam'
-                        ? 'Chọn skill và part để xem danh sách câu hỏi.'
-                        : 'Chọn part để xem danh sách câu hỏi.';
+                        ? 'Hãy chọn skill và part.'
+                        : 'Hãy chọn part.';
                     message.classList.remove('d-none');
                 } else if (visibleCount === 0) {
-                    message.textContent = 'Không có câu hỏi phù hợp với lựa chọn này.';
+                    message.textContent = 'Chưa có câu hỏi phù hợp với lựa chọn này.';
                     message.classList.remove('d-none');
                 } else {
                     message.classList.add('d-none');
@@ -384,11 +376,26 @@
         }
 
         document.addEventListener('DOMContentLoaded', function () {
+            const createForm = document.getElementById('createQuestionForm');
+            const rememberedType = localStorage.getItem(questionTypeStorageKey);
+
+            if (createForm && rememberedType) {
+                const createTypeSelect = createForm.querySelector('.question-type-select');
+                if (createTypeSelect) {
+                    createTypeSelect.value = rememberedType;
+                }
+            }
+
             document.querySelectorAll('.question-form').forEach(form => {
                 syncQuestionForm(form);
 
                 form.querySelector('[name="section_skill"]')?.addEventListener('change', () => syncQuestionForm(form));
-                form.querySelector('.question-type-select')?.addEventListener('change', () => syncQuestionForm(form));
+                form.querySelector('.question-type-select')?.addEventListener('change', function () {
+                    syncQuestionForm(form);
+                    if (form.id === 'createQuestionForm') {
+                        localStorage.setItem(questionTypeStorageKey, this.value);
+                    }
+                });
             });
 
             const skillButtons = document.querySelectorAll('.skill-btn');

@@ -54,12 +54,16 @@
                         <!-- ERROR -->
                         <div id="loginAlert">
                             @if(session('error'))
-                                <div class="alert alert-danger auto-hide-alert">
+                                <div class="alert alert-danger auto-hide-alert alert-dismissible fade show" role="alert">
+                                    <i class="fa-solid fa-circle-xmark me-2"></i>
                                     {{ session('error') }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                                 </div>
                             @elseif(session('success'))
-                                <div class="alert alert-success auto-hide-alert">
+                                <div class="alert alert-success auto-hide-alert alert-dismissible fade show" role="alert">
+                                    <i class="fa-solid fa-circle-check me-2"></i>
                                     {{ session('success') }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                                 </div>
                             @endif
                         </div>
