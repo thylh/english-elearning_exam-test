@@ -30,7 +30,7 @@ class ExamQuestionController extends Controller
 
         if ($request->hasFile('prompt_attachment')) {
             $data['prompt_attachment'] = $request->file('prompt_attachment')
-                ->store('exam_prompts', 'public');
+                ->store('exam_prompts', 'local');
         }
 
         $data['order'] = $this->resolveInsertedOrder($exam, $data['section_skill'], $data['part_number'], $data['order'] ?? null);
@@ -52,11 +52,16 @@ class ExamQuestionController extends Controller
 
         if ($request->hasFile('prompt_attachment')) {
             if ($question->prompt_attachment) {
-                Storage::disk('public')->delete($question->prompt_attachment);
+                Storage::disk('local')->delete($question->prompt_attachment);
             }
 
             $data['prompt_attachment'] = $request->file('prompt_attachment')
-                ->store('exam_prompts', 'public');
+                ->store('exam_prompts', 'local');
+        } elseif ($request->boolean('remove_prompt_attachment')) {
+            if ($question->prompt_attachment) {
+                Storage::disk('local')->delete($question->prompt_attachment);
+            }
+            $data['prompt_attachment'] = null;
         }
 
         $data['order'] = $this->resolveUpdatedOrder($question, $data['order'] ?? $question->order, $data['section_skill'], $data['part_number']);
@@ -92,7 +97,8 @@ class ExamQuestionController extends Controller
             'section_skill' => ['nullable', Rule::in(['reading', 'listening', 'writing', 'speaking'])],
             'part_number' => 'nullable|integer|min:1|max:4',
             'question_text' => 'required|string',
-            'prompt_attachment' => 'nullable|file|max:10240|mimes:jpg,jpeg,png,gif,mp3,wav,mp4,pdf',
+            'prompt_attachment' => 'nullable|file|max:51200|mimes:jpg,jpeg,png,gif,mp3,wav,mp4,pdf',
+            'remove_prompt_attachment' => 'nullable|boolean',
             'prompt_text' => 'nullable|string',
             'question_type' => ['required', Rule::in(['multiple_choice', 'checkbox', 'text', 'writing', 'speaking'])],
             'correct_answer' => 'nullable|string',

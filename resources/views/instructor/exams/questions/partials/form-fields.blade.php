@@ -51,13 +51,21 @@
 <div class="mt-3 attachment-field" style="display:none;">
     <label class="form-label">File kèm theo đề bài</label>
     <input type="file" name="prompt_attachment" class="form-control" accept=".jpg,.jpeg,.png,.gif,.mp3,.wav,.mp4,.pdf">
-    <div class="form-text attachment-hint"></div>
+    <div class="form-text attachment-hint">Dung lượng tối đa 50MB. Định dạng: JPG, PNG, GIF, MP3, WAV, MP4, PDF.</div>
     @if($question?->prompt_attachment)
-        <div class="mt-2">
+        @php
+            $attachmentUrl = route('media.exam_question', $question);
+        @endphp
+        <div class="mt-2 current-attachment d-flex align-items-center gap-2">
             <strong>File kèm theo hiện tại:</strong>
-            <a href="{{ asset('storage/' . $question->prompt_attachment) }}" target="_blank" rel="noopener">
+            <a href="{{ $attachmentUrl }}" target="_blank" rel="noopener">
                 {{ basename($question->prompt_attachment) }}
             </a>
+            <button type="button" class="btn btn-link p-0 remove-attachment-button"
+                data-remove-field="remove_prompt_attachment">
+                <i class="fa-solid fa-trash"></i>
+            </button>
+            <input type="hidden" name="remove_prompt_attachment" value="0">
         </div>
     @endif
 </div>

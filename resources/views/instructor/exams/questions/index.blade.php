@@ -18,7 +18,7 @@
     $questionTypes = [
         'multiple_choice' => 'Trắc nghiệm 1 đáp án',
         'checkbox' => 'Chọn nhiều đáp án',
-        'text' => 'Listening key',
+        'text' => 'Listening script',
         'writing' => 'Writing response',
         'speaking' => 'Speaking prompt',
     ];
@@ -215,8 +215,8 @@
             const currentSkill = sectionSelect?.value || activeSkill || (examType === 'practice' ? examSkill : null);
             const needsPart = ['reading', 'listening'].includes(currentSkill);
             const currentType = typeSelect?.value;
-            const isListeningType = currentType === 'text';
-            const isSpeakingType = currentType === 'speaking';
+            const isListeningSkill = currentSkill === 'listening';
+            const isSpeakingSkill = currentSkill === 'speaking';
             const isWritingType = currentType === 'writing';
             const showOptions = ['multiple_choice', 'checkbox', 'text'].includes(currentType);
 
@@ -235,16 +235,16 @@
             }
 
             if (attachmentField && attachmentInput) {
-                attachmentField.style.display = (isListeningType || isSpeakingType) ? 'block' : 'none';
-                if (isListeningType) {
+                attachmentField.style.display = (isListeningSkill || isSpeakingSkill) ? 'block' : 'none';
+                if (isListeningSkill) {
                     attachmentInput.accept = '.mp3,.wav,.mp4';
-                    // attachmentHint.textContent = 'Tải lên file ghi âm để làm đề bài Listening.';
-                } else if (isSpeakingType) {
+                    attachmentHint.textContent = 'Tải lên file ghi âm để làm đề bài Listening. Dung lượng tối đa 50MB.';
+                } else if (isSpeakingSkill) {
                     attachmentInput.accept = '.jpg,.jpeg,.png,.gif';
-                    // attachmentHint.textContent = 'Tải lên ảnh để kèm đề bài Speaking.';
+                    attachmentHint.textContent = 'Tải lên ảnh để kèm đề bài Speaking. Dung lượng tối đa 50MB.';
                 } else {
                     attachmentInput.accept = '.jpg,.jpeg,.png,.gif,.mp3,.wav,.mp4,.pdf';
-                    attachmentHint.textContent = '';
+                    attachmentHint.textContent = 'Dung lượng tối đa 50MB. Định dạng: JPG, PNG, GIF, MP3, WAV, MP4, PDF.';
                 }
             }
 
@@ -253,9 +253,18 @@
             }
 
             if (answerLabel) {
-                answerLabel.textContent = isWritingType || isSpeakingType
+                answerLabel.textContent = isWritingType || isSpeakingSkill
                     ? 'Gợi ý chấm / tiêu chí chấm'
                     : 'Đáp án đúng / gợi ý đáp án';
+            }
+
+            const removeButton = form.querySelector('.remove-attachment-button');
+            if (removeButton) {
+                removeButton.addEventListener('click', () => {
+                    const hidden = form.querySelector('[name="remove_prompt_attachment"]');
+                    if (hidden) hidden.value = '1';
+                    removeButton.closest('.current-attachment')?.remove();
+                });
             }
 
             // if (answerHint) {

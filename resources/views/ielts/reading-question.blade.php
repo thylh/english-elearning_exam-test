@@ -61,6 +61,29 @@
                                 <div class="q-block" data-qid="{{ $q->id }}">
                                     <h2>Question {{ $loop->iteration }}</h2>
                                     <p>{!! nl2br(e($q->question_text)) !!}</p>
+
+                                    @if($q->prompt_attachment)
+                                        @php
+                                            $attachmentExt = strtolower(pathinfo($q->prompt_attachment, PATHINFO_EXTENSION));
+                                            $attachmentUrl = route('media.exam_question', $q);
+                                        @endphp
+                                        <div class="question-attachment mb-3">
+                                            @if(in_array($attachmentExt, ['mp3', 'wav', 'm4a', 'aac', 'ogg']))
+                                                <audio controls style="width: 100%;">
+                                                    <source src="{{ $attachmentUrl }}"
+                                                        type="audio/{{ $attachmentExt === 'mp3' ? 'mpeg' : $attachmentExt }}">
+                                                    Your browser does not support the audio element.
+                                                </audio>
+                                            @elseif(in_array($attachmentExt, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
+                                                <img src="{{ $attachmentUrl }}" alt="Attachment for question {{ $loop->iteration }}"
+                                                    style="max-width: 100%; display: block; margin-top: 1rem;">
+                                            @else
+                                                <a href="{{ $attachmentUrl }}" target="_blank" rel="noopener">Tải xuống tệp đính
+                                                    kèm</a>
+                                            @endif
+                                        </div>
+                                    @endif
+
                                     @if($q->question_type === 'checkbox')
                                         @foreach($q->options ?? [] as $idx => $opt)
                                             <label>

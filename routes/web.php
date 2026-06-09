@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MediaController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
@@ -8,6 +9,10 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 Route::get('/', function () {
     return view('welcome');
 });
+
+// Protected media route for serving private attachments (supports range requests)
+Route::get('media/exam-question/{question}', [MediaController::class, 'serveExamQuestion'])
+    ->name('media.exam_question');
 
 // =========================
 // AUTHENTICATION
