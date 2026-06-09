@@ -144,6 +144,15 @@
         let remaining = duration;
         const timerEl = document.getElementById('timer');
         const submitBtn = document.getElementById('submit-btn');
+        const examId = '{{ $exam->id }}';
+        const examSkill = '{{ $exam->skill ?? 'general' }}';
+        const storageKey = `exam_draft_${examId}_${examSkill}`;
+        const timeKey = `${storageKey}_time`;
+        const navigationType = performance.getEntriesByType?.('navigation')?.[0]?.type ||
+            (performance.navigation ? (performance.navigation.type === 1 ? 'reload' : performance.navigation.type === 2 ? 'back_forward' : 'navigate') : null);
+        const isReload = navigationType === 'reload';
+        let ignoreBeforeUnload = false;
+        const form = document.getElementById('exam-form');
 
         function format(seconds) {
             const m = Math.floor(seconds / 60).toString().padStart(2, '0');
@@ -155,12 +164,140 @@
             timerEl.textContent = isPractice ? format(elapsed) : format(Math.max(0, remaining));
         }
 
+        function collectAnswers() {
+            const fd = new FormData(form);
+            const answers = {};
+            for (const [k, v] of fd.entries()) {
+                const m = k.match(/answers\[(\d+)\]/);
+                if (!m) continue;
+                const qid = m[1];
+                if (k.endsWith('[]')) {
+                    if (!answers[qid]) answers[qid] = [];
+                    answers[qid].push(v);
+                } else {
+                    if (answers[qid]) {
+                        if (Array.isArray(answers[qid])) answers[qid].push(v);
+                        else answers[qid] = [answers[qid], v];
+                    } else answers[qid] = v;
+                }
+            }
+            return answers;
+        }
+
+        function saveAnswers() {
+            try {
+                localStorage.setItem(storageKey, JSON.stringify(collectAnswers()));
+            } catch (e) {
+                // ignore storage errors
+            }
+        }
+
+        function restoreAnswers() {
+            try {
+                if (!isReload) {
+                    clearDraft();
+                    return;
+                }
+
+                const saved = localStorage.getItem(storageKey);
+                if (!saved) return;
+                const answers = JSON.parse(saved);
+                for (const qid in answers) {
+                    const value = answers[qid];
+                    const textArea = form.querySelector(`textarea[name="answers[${qid}]"]`);
+                    const radios = form.querySelectorAll(`input[name="answers[${qid}]"]`);
+                    const checkboxes = form.querySelectorAll(`input[name="answers[${qid}][]"]`);
+
+                    if (textArea && typeof value === 'string') {
+                        textArea.value = value;
+                    }
+
+                    if (checkboxes.length && Array.isArray(value)) {
+                        checkboxes.forEach(input => {
+                            input.checked = value.includes(input.value);
+                        });
+                    }
+
+                    if (radios.length && typeof value === 'string') {
+                        radios.forEach(input => {
+                            input.checked = input.value === value;
+                        });
+                    }
+                }
+            } catch (e) {
+                // ignore storage errors
+            }
+        }
+
+        function saveTime() {
+            try {
+                const timeValue = isPractice ? elapsed : remaining;
+                localStorage.setItem(timeKey, String(timeValue));
+            } catch (e) {
+                // ignore storage errors
+            }
+        }
+
+        function restoreTime() {
+            try {
+                const saved = localStorage.getItem(timeKey);
+                if (!saved) return;
+                const value = parseInt(saved, 10);
+                if (isNaN(value)) return;
+                if (isPractice) {
+                    elapsed = value;
+                } else {
+                    remaining = value;
+                }
+            } catch (e) {
+                // ignore storage errors
+            }
+        }
+
+        function clearDraft() {
+            try {
+                localStorage.removeItem(storageKey);
+                localStorage.removeItem(timeKey);
+            } catch (e) {
+                // ignore storage errors
+            }
+        }
+
+        form.addEventListener('input', saveAnswers);
+        form.addEventListener('change', saveAnswers);
+        restoreAnswers();
+        restoreTime();
         updateTimer();
+
+        window.addEventListener('keydown', (event) => {
+            if (event.key === 'F5' || ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'r')) {
+                ignoreBeforeUnload = true;
+            }
+        });
+
+        window.addEventListener('keyup', () => {
+            ignoreBeforeUnload = false;
+        });
+
+        window.addEventListener('beforeunload', (event) => {
+            if (ignoreBeforeUnload) return;
+            if (Object.keys(JSON.parse(localStorage.getItem(storageKey) || '{}')).length > 0) {
+                event.preventDefault();
+                event.returnValue = '';
+            }
+        });
+
+        window.addEventListener('pageshow', (event) => {
+            if (event.persisted && !isReload) {
+                clearDraft();
+            }
+        });
 
         const iv = setInterval(() => {
             if (isPractice) {
                 elapsed += 1;
                 updateTimer();
+                saveTime();
                 if (elapsed >= duration) {
                     clearInterval(iv);
                     window.alert('Thời gian practice đã hết. Bài sẽ tự động nộp.');
@@ -169,6 +306,7 @@
             } else {
                 remaining -= 1;
                 updateTimer();
+                saveTime();
                 if (remaining <= 0) {
                     clearInterval(iv);
                     window.alert('Hết giờ! Bài sẽ tự động nộp.');
@@ -223,16 +361,19 @@
         }
 
         async function submit() {
+            ignoreBeforeUnload = true;
             const unanswered = findUnansweredQuestions();
             if (unanswered.length > 0) {
                 const message = `Bạn chưa làm câu ${unanswered.join(', ')}. Có chắc muốn nộp bài?`;
                 if (!window.confirm(message)) {
                     submitBtn.disabled = false;
+                    ignoreBeforeUnload = false;
                     return;
                 }
             }
 
             submitBtn.disabled = true;
+            clearDraft();
             const answers = collectAnswers();
             const res = await fetch(`{{ route('exams.submit', $exam) }}`, {
                 method: 'POST',

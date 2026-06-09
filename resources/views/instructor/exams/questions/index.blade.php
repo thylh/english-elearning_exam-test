@@ -235,13 +235,16 @@
             }
 
             if (attachmentField && attachmentInput) {
-                attachmentField.style.display = (isListeningSkill || isSpeakingSkill) ? 'block' : 'none';
+                attachmentField.style.display = (isListeningSkill || isSpeakingSkill || isWritingType) ? 'block' : 'none';
                 if (isListeningSkill) {
                     attachmentInput.accept = '.mp3,.wav,.mp4';
                     attachmentHint.textContent = 'Tải lên file ghi âm để làm đề bài Listening. Dung lượng tối đa 50MB.';
                 } else if (isSpeakingSkill) {
                     attachmentInput.accept = '.jpg,.jpeg,.png,.gif';
                     attachmentHint.textContent = 'Tải lên ảnh để kèm đề bài Speaking. Dung lượng tối đa 50MB.';
+                } else if (isWritingType) {
+                    attachmentInput.accept = '.jpg,.jpeg,.png,.gif,.pdf';
+                    attachmentHint.textContent = 'Tải lên file để kèm đề bài Writing. Dung lượng tối đa 50MB.';
                 } else {
                     attachmentInput.accept = '.jpg,.jpeg,.png,.gif,.mp3,.wav,.mp4,.pdf';
                     attachmentHint.textContent = 'Dung lượng tối đa 50MB. Định dạng: JPG, PNG, GIF, MP3, WAV, MP4, PDF.';

@@ -56,6 +56,7 @@ Route::view('/speaking', 'ielts.speaking');
 // =========================
 use App\Http\Controllers\Instructor\ExamController;
 use App\Http\Controllers\Instructor\ExamQuestionController;
+use App\Http\Controllers\Instructor\WritingSubmissionController;
 
 Route::middleware(['auth', 'role:instructor'])->prefix('instructor')->name('instructor.')->group(function(){
     Route::get('/exams', [ExamController::class, 'index'])->name('exams.index');
@@ -68,7 +69,8 @@ Route::middleware(['auth', 'role:instructor'])->prefix('instructor')->name('inst
     Route::post('/exams/{exam}/questions', [ExamQuestionController::class, 'store'])->name('exams.questions.store');
     Route::put('/exams/{exam}/questions/{question}', [ExamQuestionController::class, 'update'])->name('exams.questions.update');
     Route::delete('/exams/{exam}/questions/{question}', [ExamQuestionController::class, 'destroy'])->name('exams.questions.destroy');
-});
+    Route::get('/writing-submissions', [WritingSubmissionController::class, 'index'])->name('writing.submissions.index');
+    Route::patch('/writing-submissions/{writingSubmission}', [WritingSubmissionController::class, 'update'])->name('writing.submissions.update');});
 
 // =========================
 // PASSWORD RESET

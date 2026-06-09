@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Exam;
+use App\Models\WritingSubmission;
+use App\Services\AutoGrader;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class ExamPublicController extends Controller
@@ -50,12 +53,71 @@ class ExamPublicController extends Controller
 
         $data = $request->validate([
             'answers' => 'required|array',
+            'grading_method' => 'nullable|in:auto,manual',
         ]);
 
         $answers = $data['answers'];
+        $gradingMethod = $data['grading_method'] ?? 'manual';
 
         $questions = $exam->questions()->orderBy('order')->get();
 
+        // Special handling for writing skill exams
+        if (($exam->skill ?? null) === 'writing') {
+            $details = [];
+            $total = $questions->count();
+            $sumScore = 0;
+
+            foreach ($questions as $q) {
+                $qid = (string) $q->id;
+                $submitted = isset($answers[$qid]) ? (string) $answers[$qid] : '';
+
+                // Persist submission
+                $submission = WritingSubmission::create([
+                    'exam_id' => $exam->id,
+                    'question_id' => $q->id,
+                    'user_id' => Auth::id(),
+                    'answer_text' => $submitted,
+                    'grading_method' => $gradingMethod,
+                    'status' => $gradingMethod === 'auto' ? 'graded' : 'pending',
+                ]);
+
+                $detail = [
+                    'question_id' => $q->id,
+                    'submitted' => $submitted,
+                    'status' => $submission->status,
+                ];
+
+                if ($gradingMethod === 'auto') {
+                    $grader = new AutoGrader();
+                    $res = $grader->grade($q->question_text, $submitted, env('AUTO_GRADER_PROVIDER', 'openai'));
+                    $score = isset($res['score']) ? floatval($res['score']) : 0.0;
+                    $feedback = $res['feedback'] ?? null;
+
+                    $submission->update([
+                        'auto_score' => $score,
+                        'auto_feedback' => $feedback,
+                        'status' => 'graded',
+                        'graded_at' => now(),
+                    ]);
+
+                    $detail['auto_score'] = $score;
+                    $detail['auto_feedback'] = $feedback;
+                    $sumScore += $score;
+                }
+
+                $details[] = $detail;
+            }
+
+            $score = 0;
+            if ($gradingMethod === 'auto' && $total > 0) {
+                // average score across questions
+                $score = round($sumScore / $total, 1);
+            }
+
+            return view('ielts.exam-result', compact('exam', 'total', 'score', 'details'));
+        }
+
+        // Non-writing fallback: existing automatic correctness checking
         $total = $questions->count();
         $correct = 0;
         $details = [];
