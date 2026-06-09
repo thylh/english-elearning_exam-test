@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ExamQuestion;
+use App\Models\Submission;
 use App\Models\User;
 
 /**
@@ -64,5 +65,10 @@ class Exam extends Model
     public function questions()
     {
         return $this->hasMany(ExamQuestion::class)->orderBy('order');
+    }
+
+    public function submissions()
+    {
+        return $this->hasMany(Submission::class);
     }
 }

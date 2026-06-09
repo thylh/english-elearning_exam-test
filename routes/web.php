@@ -5,6 +5,7 @@ use App\Http\Controllers\MediaController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\ProfileController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -13,6 +14,8 @@ Route::get('/', function () {
 // Protected media route for serving private attachments (supports range requests)
 Route::get('media/exam-question/{question}', [MediaController::class, 'serveExamQuestion'])
     ->name('media.exam_question');
+Route::get('media/speaking-submission/{submission}', [MediaController::class, 'serveSpeakingSubmission'])
+    ->name('media.speaking_submission');
 
 // =========================
 // AUTHENTICATION
@@ -35,6 +38,12 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware('auth');
 
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::patch('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+});
+
 // =========================
 // ENGLISH FOR YOU TEMPLATE
 // =========================
@@ -56,7 +65,8 @@ Route::view('/speaking', 'ielts.speaking');
 // =========================
 use App\Http\Controllers\Instructor\ExamController;
 use App\Http\Controllers\Instructor\ExamQuestionController;
-use App\Http\Controllers\Instructor\WritingSubmissionController;
+use App\Http\Controllers\Instructor\SubmissionController;
+use App\Http\Controllers\Instructor\StatsController;
 
 Route::middleware(['auth', 'role:instructor'])->prefix('instructor')->name('instructor.')->group(function(){
     Route::get('/exams', [ExamController::class, 'index'])->name('exams.index');
@@ -69,8 +79,10 @@ Route::middleware(['auth', 'role:instructor'])->prefix('instructor')->name('inst
     Route::post('/exams/{exam}/questions', [ExamQuestionController::class, 'store'])->name('exams.questions.store');
     Route::put('/exams/{exam}/questions/{question}', [ExamQuestionController::class, 'update'])->name('exams.questions.update');
     Route::delete('/exams/{exam}/questions/{question}', [ExamQuestionController::class, 'destroy'])->name('exams.questions.destroy');
-    Route::get('/writing-submissions', [WritingSubmissionController::class, 'index'])->name('writing.submissions.index');
-    Route::patch('/writing-submissions/{writingSubmission}', [WritingSubmissionController::class, 'update'])->name('writing.submissions.update');});
+    Route::get('/submissions', [SubmissionController::class, 'index'])->name('submissions.index');
+    Route::patch('/submissions/{submission}', [SubmissionController::class, 'update'])->name('submissions.update');
+    Route::get('/stats', [StatsController::class, 'index'])->name('stats.index');
+});
 
 // =========================
 // PASSWORD RESET
@@ -85,3 +97,12 @@ Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showRes
     ->name('reset.password');
 Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])
     ->name('reset.password.update');
+
+// =========================
+// LEARNING RESULTS
+// =========================
+use App\Http\Controllers\LearningResultController;
+Route::middleware(['auth'])->group(function() {
+    Route::get('/learning-results', [LearningResultController::class, 'index'])->name('learning-results.index');
+    Route::get('/learning-results/{result}', [LearningResultController::class, 'show'])->name('learning-results.show');
+});

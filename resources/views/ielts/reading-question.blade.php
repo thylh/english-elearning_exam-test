@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Reading IELTS</title>
+    <title>Reading</title>
 
     @vite([
         'resources/css/english-for-you.css',
@@ -136,6 +136,7 @@
         const timerEl = document.getElementById('timer');
         const submitBtn = document.getElementById('submit-btn');
         const examId = '{{ $exam->id }}';
+        const returnOrigin = '{{ $returnTarget ?? 'practice' }}';
         const examSkill = '{{ $exam->skill ?? 'general' }}';
         const storageKey = `exam_draft_${examId}_${examSkill}`;
         const timeKey = `${storageKey}_time`;
@@ -373,7 +374,7 @@
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
-                body: JSON.stringify({ answers })
+                body: JSON.stringify({ answers, origin: returnOrigin })
             });
             if (res.redirected) window.location = res.url;
             else {

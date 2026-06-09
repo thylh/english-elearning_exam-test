@@ -10,7 +10,7 @@
 
             <h2>English For You</h2>
 
-            <span>IELTS Learning Website</span>
+            <span>English Learning Website</span>
 
         </div>
 
@@ -24,30 +24,30 @@
                     <i class="fa-solid fa-clipboard-list"></i>
                     Quản lý đề
                 </a>
-                <a href="#">
-                    <i class="fa-solid fa-check-double"></i>
+                <a href="{{ route('instructor.submissions.index') }}">
+                    <i class="fa-solid fa-clipboard-check"></i>
                     Chấm thi
                 </a>
-                <a href="#">
-                    <i class="fa-solid fa-file-lines"></i>
-                    Kết quả học viên
-                </a>
-                <a href="#">
+                <a href="{{ route('instructor.stats.index') }}" class="{{ Request::is('instructor/stats*') ? 'active' : '' }}">
                     <i class="fa-solid fa-chart-bar"></i>
                     Thống kê
                 </a>
             @else
-                <a href="/dashboard">
+                <a href="/dashboard" class="{{ Request::is('dashboard') ? 'active' : '' }}">
                     <i class="fa-solid fa-house"></i>
                     Trang chủ
                 </a>
-                <a href="/practice">
+                <a href="/practice" class="{{ Request::is('practice') || Request::is('exams/*/take') ? 'active' : '' }}">
                     <i class="fa-solid fa-book"></i>
                     Practice
                 </a>
-                <a href="/exam-test">
+                <a href="/exam-test" class="{{ Request::is('exam-test') ? 'active' : '' }}">
                     <i class="fa-solid fa-clipboard-list"></i>
                     Exam test
+                </a>
+                <a href="{{ route('learning-results.index') }}" class="{{ Request::is('learning-results*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-square-poll-vertical"></i>
+                    Kết quả học tập
                 </a>
             @endif
         @endauth
@@ -79,16 +79,17 @@
                         <i class="fa-solid fa-house"></i>
                         Dashboard
                     </a>
-                    {{-- <a href="/instructor/exams">
-                        <i class="fa-solid fa-house"></i>
-                        Dashboard giảng viên
-                    </a> --}}
                 @else
                     <a href="/dashboard">
                         <i class="fa-solid fa-house"></i>
                         Dashboard
                     </a>
                 @endif
+
+                <a href="{{ route('profile.edit') }}">
+                    <i class="fa-solid fa-user-gear"></i>
+                    Hồ sơ cá nhân
+                </a>
 
                 <a href="{{ route('logout') }}"
                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

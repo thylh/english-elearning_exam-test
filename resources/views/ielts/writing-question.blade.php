@@ -5,7 +5,7 @@
 
     <meta charset="UTF-8">
 
-    <title>Writing IELTS</title>
+    <title>Writing</title>
 
     @vite([
         'resources/css/english-for-you.css',
@@ -65,6 +65,7 @@
                 </div>
 
                 <input type="hidden" name="grading_method" id="grading-method" value="manual">
+                <input type="hidden" name="origin" value="{{ $returnTarget ?? 'practice' }}">
 
                 <div class="writing-section">
                     <h3>

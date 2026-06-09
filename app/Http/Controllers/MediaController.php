@@ -68,4 +68,61 @@ class MediaController extends Controller
 
         return $response;
     }
+
+    public function serveSpeakingSubmission(Request $request, \App\Models\Submission $submission)
+    {
+        if (! $submission->audio_path) {
+            abort(404);
+        }
+
+        $disk = Storage::disk('public');
+        $path = ltrim($submission->audio_path, '/');
+
+        if (! $disk->exists($path)) {
+            abort(404);
+        }
+
+        $fullPath = $disk->path($path);
+        $size = filesize($fullPath);
+        $mime = mime_content_type($fullPath) ?: 'audio/webm';
+
+        $start = 0;
+        $length = $size;
+        $status = 200;
+        $headers = [
+            'Content-Type' => $mime,
+            'Accept-Ranges' => 'bytes',
+        ];
+
+        if ($request->headers->has('range')) {
+            $range = $request->header('range');
+            if (preg_match('/bytes=(\d+)-(\d*)/', $range, $matches)) {
+                $start = intval($matches[1]);
+                $end = $matches[2] === '' ? ($size - 1) : intval($matches[2]);
+                if ($end > $size - 1) $end = $size - 1;
+                $length = $end - $start + 1;
+                $status = 206;
+                $headers['Content-Range'] = "bytes $start-$end/$size";
+                $headers['Content-Length'] = $length;
+            }
+        } else {
+            $headers['Content-Length'] = $size;
+        }
+
+        $response = new StreamedResponse(function () use ($fullPath, $start, $length) {
+            $fp = fopen($fullPath, 'rb');
+            fseek($fp, $start);
+            $bufferSize = 1024 * 8;
+            $remaining = $length;
+            while ($remaining > 0 && !feof($fp)) {
+                $read = ($remaining > $bufferSize) ? $bufferSize : $remaining;
+                echo fread($fp, $read);
+                flush();
+                $remaining -= $read;
+            }
+            fclose($fp);
+        }, $status, $headers);
+
+        return $response;
+    }
 }

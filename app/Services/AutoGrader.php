@@ -59,6 +59,69 @@ class AutoGrader
         ];
     }
 
+    /**
+     * Grade a single speaking answer. Returns ['score' => float, 'feedback' => string, 'transcript' => ?string].
+     */
+    public function gradeSpeaking(string $questionText, ?string $audioPath, string $provider = 'openai'): array
+    {
+        if (!$audioPath) {
+            return [
+                'score' => 0.0,
+                'feedback' => 'Không tìm thấy tệp ghi âm để chấm.',
+                'transcript' => null,
+            ];
+        }
+
+        $transcript = null;
+
+        try {
+            if ($provider === 'openai' && env('OPENAI_API_KEY')) {
+                $fullPath = \Illuminate\Support\Facades\Storage::disk('public')->path($audioPath);
+                
+                if (file_exists($fullPath)) {
+                    $response = Http::withToken(env('OPENAI_API_KEY'))
+                        ->attach('file', fopen($fullPath, 'r'), basename($fullPath))
+                        ->post('https://api.openai.com/v1/audio/transcriptions', [
+                            'model' => 'whisper-1',
+                        ]);
+
+                    if ($response->ok()) {
+                        $transcript = $response->json()['text'] ?? null;
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            // log or ignore
+        }
+
+        if ($transcript) {
+            $gradeResult = $this->grade($questionText, $transcript, $provider);
+            return [
+                'score' => $gradeResult['score'],
+                'feedback' => $gradeResult['feedback'],
+                'transcript' => $transcript,
+            ];
+        }
+
+        // Fallback heuristic grading based on file size
+        $fullPath = \Illuminate\Support\Facades\Storage::disk('public')->path($audioPath);
+        if (file_exists($fullPath)) {
+            $size = filesize($fullPath);
+            $score = min(100, max(0, round(($size / 50000) * 100, 1))); // rough heuristic based on size
+            return [
+                'score' => $score,
+                'feedback' => 'Auto-grade (heuristic based on audio size): Audio submitted successfully.',
+                'transcript' => '[Audio transcription fallback: Heuristic active, could not transcribe audio]',
+            ];
+        }
+
+        return [
+            'score' => 0.0,
+            'feedback' => 'Không thể tải hoặc xử lý tệp ghi âm.',
+            'transcript' => null,
+        ];
+    }
+
     protected function extractJson(string $text): ?array
     {
         $start = strpos($text, '{');

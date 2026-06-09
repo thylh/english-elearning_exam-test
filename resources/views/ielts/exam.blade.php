@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exam Test IELTS</title>
+    <title>Exam Test</title>
 
     @vite([
         'resources/css/english-for-you.css',
@@ -42,7 +42,7 @@
                             <div class="band-tag">{{ $exam->band ? 'Band ' . $exam->band : 'Test' }}</div>
                             <h3>{{ $exam->title }}</h3>
                             <p>{{ Str::limit($exam->description ?? 'Bài thi hoàn chỉnh', 120) }}</p>
-                            <a href="{{ route('exams.take', $exam) }}">Làm bài</a>
+                            <a href="{{ route('exams.take', ['exam' => $exam, 'origin' => 'exam-test']) }}">Làm bài</a>
                         </div>
                     </div>
                 @empty

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Submission;
 
 /**
  * @property int $id
@@ -59,5 +60,10 @@ class ExamQuestion extends Model
     public function exam()
     {
         return $this->belongsTo(Exam::class);
+    }
+
+    public function submissions()
+    {
+        return $this->hasMany(Submission::class, 'question_id');
     }
 }

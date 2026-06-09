@@ -87,4 +87,18 @@ if(skillButtons.length && skillPanels.length){
 
     });
 
+
 }
+
+// AUTO-DISMISS SUBMISSIONS ALERT
+const submissionsAlert = document.getElementById('submissions-alert');
+
+if (submissionsAlert) {
+    setTimeout(() => {
+        submissionsAlert.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        submissionsAlert.style.opacity = '0';
+        submissionsAlert.style.transform = 'translateY(-8px)';
+        setTimeout(() => submissionsAlert.remove(), 500);
+    }, 4000);
+}
+

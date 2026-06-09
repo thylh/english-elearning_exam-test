@@ -54,7 +54,8 @@
     font-weight:bold;
 }
 
-.menu a:hover{
+.menu a:hover,
+.menu a.active{
     color:#8d6e63;
 }
 

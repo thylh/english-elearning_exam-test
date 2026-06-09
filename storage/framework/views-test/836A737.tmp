@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Thống kê - English For You</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <?php echo app('Illuminate\Foundation\Vite')([
+        'resources/css/app.css',
+        'resources/css/english-for-you.css',
+        'resources/js/english-for-you.js'
+    ]); ?>
+
+    <style>
+        :root {
+            --stats-bg: #fff7f2;
+            --stats-surface: rgba(255, 255, 255, 0.92);
+            --stats-border: rgba(147, 99, 75, 0.12);
+            --stats-text: #3f2a23;
+            --stats-muted: #8b6b5b;
+            --stats-shadow: 0 20px 45px rgba(80, 47, 28, 0.08);
+        }
+
+        body {
+            background:
+                radial-gradient(circle at top left, rgba(249, 168, 37, 0.16), transparent 24%),
+                radial-gradient(circle at top right, rgba(59, 130, 246, 0.12), transparent 22%),
+                linear-gradient(180deg, #fffaf6 0%, #fff7f2 100%);
+            color: var(--stats-text);
+            font-family: 'Be Vietnam Pro', system-ui, sans-serif;
+        }
+
+        .stats-shell {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px 24px 56px;
+        }
+
+        .stats-hero {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 22px;
+        }
+
+        .stats-hero h1 {
+            font-size: clamp(2rem, 3vw, 3rem);
+            line-height: 1.05;
+            font-weight: 800;
+            margin: 0 0 10px;
+            letter-spacing: -0.03em;
+        }
+
+        .stats-hero p {
+            margin: 0;
+            color: var(--stats-muted);
+            max-width: 760px;
+        }
+
+        .hero-badges {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.82);
+            border: 1px solid var(--stats-border);
+            box-shadow: var(--stats-shadow);
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: var(--stats-text);
+            white-space: nowrap;
+        }
+
+        .hero-badge strong {
+            color: #9a3412;
+        }
+
+        .alert-strip {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 16px 18px;
+            margin-bottom: 22px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.16), rgba(251, 146, 60, 0.1));
+            border: 1px solid rgba(251, 146, 60, 0.22);
+            color: #7c2d12;
+            box-shadow: var(--stats-shadow);
+        }
+
+        .alert-strip strong {
+            font-size: 1.1rem;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 22px;
+        }
+
+        @media (max-width: 1100px) {
+            .kpi-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 640px) {
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .kpi-card,
+        .panel {
+            background: var(--stats-surface);
+            border: 1px solid var(--stats-border);
+            border-radius: 24px;
+            box-shadow: var(--stats-shadow);
+            backdrop-filter: blur(12px);
+        }
+
+        .kpi-card {
+            position: relative;
+            overflow: hidden;
+            padding: 22px;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            inset: 0 auto 0 0;
+            width: 5px;
+            background: var(--accent, #d97706);
+        }
+
+        .kpi-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .kpi-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            display: grid;
+            place-items: center;
+            background: var(--accent-soft, #fef3c7);
+            color: var(--accent, #d97706);
+            font-size: 1.15rem;
+        }
+
+        .kpi-label {
+            margin-top: 14px;
+            font-size: 0.86rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--stats-muted);
+        }
+
+        .kpi-value {
+            margin-top: 8px;
+            font-size: clamp(1.9rem, 3vw, 2.6rem);
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -0.04em;
+        }
+
+        .kpi-foot {
+            margin-top: 10px;
+            font-size: 0.88rem;
+            color: var(--stats-muted);
+        }
+
+        .section-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(340px, 0.8fr);
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        @media (max-width: 1100px) {
+            .section-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            padding: 22px;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .panel-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0;
+            font-size: 1.05rem;
+            font-weight: 800;
+        }
+
+        .panel-title i {
+            color: #b45309;
+        }
+
+        .panel-subtitle {
+            margin: 4px 0 0;
+            color: var(--stats-muted);
+            font-size: 0.92rem;
+        }
+
+        .skill-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .skill-card {
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr);
+            gap: 14px;
+            padding: 14px;
+            border-radius: 18px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.72));
+            border: 1px solid rgba(147, 99, 75, 0.10);
+        }
+
+        .skill-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            display: grid;
+            place-items: center;
+            font-size: 1.1rem;
+            background: var(--skill-light, #eef2ff);
+            color: var(--skill-color, #2563eb);
+        }
+
+        .skill-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .skill-name {
+            font-weight: 700;
+        }
+
+        .skill-score {
+            font-weight: 800;
+            color: var(--skill-color, #2563eb);
+        }
+
+        .skill-bar {
+            height: 9px;
+            border-radius: 999px;
+            background: rgba(147, 99, 75, 0.12);
+            overflow: hidden;
+        }
+
+        .skill-bar-fill {
+            height: 100%;
+            border-radius: inherit;
+            width: 0;
+            background: linear-gradient(90deg, var(--skill-color, #2563eb), rgba(255,255,255,0.8));
+            transition: width 900ms ease;
+        }
+
+        .skill-meta {
+            margin-top: 8px;
+            font-size: 0.86rem;
+            color: var(--stats-muted);
+        }
+
+        .rank-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .rank-table th,
+        .rank-table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid rgba(147, 99, 75, 0.12);
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        .rank-table th {
+            font-size: 0.8rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--stats-muted);
+        }
+
+        .rank-table tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .rank-cell {
+            width: 38px;
+            font-weight: 800;
+            color: var(--stats-muted);
+        }
+
+        .rank-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 30px;
+            height: 30px;
+            border-radius: 999px;
+            font-size: 0.86rem;
+            font-weight: 800;
+            background: rgba(249, 115, 22, 0.12);
+            color: #c2410c;
+        }
+
+        .student-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .student-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-size: 0.88rem;
+            font-weight: 800;
+            color: #fff;
+            background: linear-gradient(135deg, #7c3aed, #2563eb);
+            flex: none;
+        }
+
+        .student-name {
+            font-weight: 700;
+        }
+
+        .student-email {
+            font-size: 0.8rem;
+            color: var(--stats-muted);
+        }
+
+        .score-chip {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 64px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-weight: 800;
+        }
+
+        .score-chip.high {
+            background: rgba(16, 185, 129, 0.12);
+            color: #047857;
+        }
+
+        .score-chip.mid {
+            background: rgba(245, 158, 11, 0.14);
+            color: #b45309;
+        }
+
+        .score-chip.low {
+            background: rgba(239, 68, 68, 0.12);
+            color: #b91c1c;
+        }
+
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.3fr) minmax(340px, 0.9fr);
+            gap: 18px;
+        }
+
+        @media (max-width: 1100px) {
+            .bottom-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chart-wrap {
+            position: relative;
+            min-height: 360px;
+        }
+
+        .exam-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .exam-item {
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr) auto;
+            gap: 12px;
+            align-items: center;
+            padding: 13px 14px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.76);
+            border: 1px solid rgba(147, 99, 75, 0.10);
+        }
+
+        .exam-rank {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: rgba(249, 115, 22, 0.12);
+            color: #c2410c;
+            font-size: 0.88rem;
+            font-weight: 800;
+        }
+
+        .exam-title {
+            font-weight: 700;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .exam-meta {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+            font-size: 0.82rem;
+            color: var(--stats-muted);
+        }
+
+        .skill-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 8px;
+            border-radius: 999px;
+            font-weight: 700;
+        }
+
+        .skill-pill.reading {
+            background: rgba(37, 99, 235, 0.12);
+            color: #1d4ed8;
+        }
+
+        .skill-pill.listening {
+            background: rgba(16, 185, 129, 0.12);
+            color: #047857;
+        }
+
+        .skill-pill.writing {
+            background: rgba(245, 158, 11, 0.12);
+            color: #b45309;
+        }
+
+        .skill-pill.speaking {
+            background: rgba(236, 72, 153, 0.12);
+            color: #be185d;
+        }
+
+        .skill-pill.general {
+            background: rgba(100, 116, 139, 0.12);
+            color: #475569;
+        }
+
+        .exam-count {
+            font-size: 0.96rem;
+            font-weight: 800;
+            color: #7c2d12;
+            white-space: nowrap;
+        }
+
+        .empty-state {
+            padding: 26px 18px;
+            text-align: center;
+            color: var(--stats-muted);
+        }
+
+        .empty-state i {
+            display: block;
+            font-size: 2rem;
+            margin-bottom: 12px;
+            color: #d97706;
+        }
+    </style>
+</head>
+<body class="page-transition">
+    <?php echo $__env->make('partials.dashboard-header', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+
+    <main class="stats-shell">
+        <section class="stats-hero">
+            <div>
+                <h1>Thống kê hệ thống</h1>
+                <p>
+                    Tổng quan hoạt động học tập, mức độ sử dụng đề thi và hiệu suất theo từng kỹ năng cho instructor.
+                </p>
+            </div>
+
+            <div class="hero-badges">
+                <div class="hero-badge">
+                    <i class="fa-solid fa-clock"></i>
+                    Bài chờ chấm: <strong><?php echo e(number_format($pendingManualSubmissions)); ?></strong>
+                </div>
+                <div class="hero-badge">
+                    <i class="fa-solid fa-star"></i>
+                    Điểm TB hệ thống:
+                    <strong>
+                        <?php echo e($overallAverageScore !== null ? number_format($overallAverageScore, 1) . '/9' : '—'); ?>
+
+                    </strong>
+                </div>
+            </div>
+        </section>
+
+        <div class="alert-strip">
+            <div>
+                <strong><?php echo e(number_format($pendingManualSubmissions)); ?></strong> bài nộp manual đang chờ chấm.
+            </div>
+            <div>
+                Cập nhật dựa trên dữ liệu `results` và `submissions` trong 30 ngày gần nhất.
+            </div>
+        </div>
+
+        <section class="kpi-grid">
+            <article class="kpi-card" style="--accent:#2563eb; --accent-soft:#eff6ff;">
+                <div class="kpi-top">
+                    <div>
+                        <div class="kpi-label">Tổng học viên</div>
+                        <div class="kpi-value"><?php echo e(number_format($totalStudents)); ?></div>
+                    </div>
+                    <div class="kpi-icon"><i class="fa-solid fa-users"></i></div>
+                </div>
+                <div class="kpi-foot">Chỉ tính tài khoản có role `student`.</div>
+            </article>
+
+            <article class="kpi-card" style="--accent:#f59e0b; --accent-soft:#fffbeb;">
+                <div class="kpi-top">
+                    <div>
+                        <div class="kpi-label">Tổng bài thi</div>
+                        <div class="kpi-value"><?php echo e(number_format($totalExams)); ?></div>
+                    </div>
+                    <div class="kpi-icon"><i class="fa-solid fa-clipboard-list"></i></div>
+                </div>
+                <div class="kpi-foot">Gồm toàn bộ đề thi hiện có trong hệ thống.</div>
+            </article>
+
+            <article class="kpi-card" style="--accent:#10b981; --accent-soft:#ecfdf5;">
+                <div class="kpi-top">
+                    <div>
+                        <div class="kpi-label">Tổng lượt làm bài</div>
+                        <div class="kpi-value"><?php echo e(number_format($totalAttempts)); ?></div>
+                    </div>
+                    <div class="kpi-icon"><i class="fa-solid fa-file-circle-check"></i></div>
+                </div>
+                <div class="kpi-foot">Tổng số bản ghi trong bảng `results`.</div>
+            </article>
+
+            <article class="kpi-card" style="--accent:#ec4899; --accent-soft:#fdf2f8;">
+                <div class="kpi-top">
+                    <div>
+                        <div class="kpi-label">Điểm TB hệ thống</div>
+                        <div class="kpi-value">
+                            <?php echo e($overallAverageScore !== null ? number_format($overallAverageScore, 1) : '—'); ?>
+
+                        </div>
+                    </div>
+                    <div class="kpi-icon"><i class="fa-solid fa-chart-line"></i></div>
+                </div>
+                <div class="kpi-foot">Chỉ tính các kết quả đã chấm (`graded`).</div>
+            </article>
+        </section>
+
+        <section class="section-grid">
+            <div class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h2 class="panel-title">
+                            <i class="fa-solid fa-layer-group"></i>
+                            Thống kê theo kỹ năng
+                        </h2>
+                        <p class="panel-subtitle">Điểm trung bình và số lượt làm bài theo 4 kỹ năng IELTS.</p>
+                    </div>
+                </div>
+
+                <div class="skill-list">
+                    <?php $__currentLoopData = $skillStats; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $skill): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <article class="skill-card" style="--skill-color: <?php echo e($skill['color']); ?>; --skill-light: <?php echo e($skill['light']); ?>;">
+                            <div class="skill-icon"><i class="fa-solid <?php echo e($skill['icon']); ?>"></i></div>
+                            <div>
+                                <div class="skill-row">
+                                    <div class="skill-name"><?php echo e($skill['label']); ?></div>
+                                    <div class="skill-score">
+                                        <?php echo e($skill['avg_score'] !== null ? number_format($skill['avg_score'], 1) . '/9' : '—'); ?>
+
+                                    </div>
+                                </div>
+                                <div class="skill-bar">
+                                    <div
+                                        class="skill-bar-fill"
+                                        data-width="<?php echo e($skill['avg_score'] !== null ? min(100, max(0, ($skill['avg_score'] / 9) * 100)) : 0); ?>"
+                                    ></div>
+                                </div>
+                                <div class="skill-meta"><?php echo e(number_format($skill['attempts'])); ?> lượt làm bài</div>
+                            </div>
+                        </article>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h2 class="panel-title">
+                            <i class="fa-solid fa-trophy"></i>
+                            Top học viên
+                        </h2>
+                        <p class="panel-subtitle">Top 5 học viên có điểm trung bình cao nhất trong các kết quả graded.</p>
+                    </div>
+                </div>
+
+                <?php if($topStudents->isEmpty()): ?>
+                    <div class="empty-state">
+                        <i class="fa-solid fa-user-slash"></i>
+                        <div>Chưa có dữ liệu chấm điểm.</div>
+                    </div>
+                <?php else: ?>
+                    <table class="rank-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Học viên</th>
+                                <th>Lượt</th>
+                                <th>Điểm</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php $__currentLoopData = $topStudents; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $student): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <?php
+                                    $rank = $index + 1;
+                                    $score = (float) $student->avg_score;
+                                    $scoreClass = $score >= 8 ? 'high' : ($score >= 6.5 ? 'mid' : 'low');
+                                    $initial = mb_strtoupper(mb_substr($student->name, 0, 1));
+                                ?>
+                                <tr>
+                                    <td class="rank-cell">
+                                        <span class="rank-pill"><?php echo e($rank); ?></span>
+                                    </td>
+                                    <td>
+                                        <div class="student-row">
+                                            <div class="student-avatar"><?php echo e($initial); ?></div>
+                                            <div>
+                                                <div class="student-name"><?php echo e($student->name); ?></div>
+                                                <div class="student-email"><?php echo e($student->email); ?></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><?php echo e(number_format($student->attempts)); ?></td>
+                                    <td><span class="score-chip <?php echo e($scoreClass); ?>"><?php echo e(number_format($score, 1)); ?></span></td>
+                                </tr>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </tbody>
+                    </table>
+                <?php endif; ?>
+            </div>
+        </section>
+
+        <section class="bottom-grid">
+            <div class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h2 class="panel-title">
+                            <i class="fa-solid fa-chart-column"></i>
+                            Hoạt động 30 ngày gần nhất
+                        </h2>
+                        <p class="panel-subtitle">Số bài nộp được ghi nhận theo ngày trong 30 ngày gần đây.</p>
+                    </div>
+                </div>
+
+                <div class="chart-wrap">
+                    <canvas id="activityChart"></canvas>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h2 class="panel-title">
+                            <i class="fa-solid fa-fire"></i>
+                            Bài thi được làm nhiều nhất
+                        </h2>
+                        <p class="panel-subtitle">Top 10 theo số lượt làm bài.</p>
+                    </div>
+                </div>
+
+                <?php if($topExams->isEmpty()): ?>
+                    <div class="empty-state">
+                        <i class="fa-solid fa-inbox"></i>
+                        <div>Chưa có dữ liệu bài thi.</div>
+                    </div>
+                <?php else: ?>
+                    <div class="exam-list">
+                        <?php $__currentLoopData = $topExams; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $exam): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <?php
+                                $skill = strtolower($exam->skill ?? 'general');
+                                $skillIcon = [
+                                    'reading' => 'fa-book-open',
+                                    'listening' => 'fa-headphones',
+                                    'writing' => 'fa-pen-nib',
+                                    'speaking' => 'fa-microphone',
+                                ][$skill] ?? 'fa-clipboard-list';
+                            ?>
+                            <article class="exam-item">
+                                <div class="exam-rank"><?php echo e($index + 1); ?></div>
+                                <div>
+                                    <div class="exam-title" title="<?php echo e($exam->title); ?>"><?php echo e($exam->title); ?></div>
+                                    <div class="exam-meta">
+                                        <span class="skill-pill <?php echo e($skill); ?>">
+                                            <i class="fa-solid <?php echo e($skillIcon); ?>"></i>
+                                            <?php echo e(ucfirst($skill)); ?>
+
+                                        </span>
+                                        <?php if($exam->avg_score !== null): ?>
+                                            <span>Điểm TB: <?php echo e(number_format($exam->avg_score, 1)); ?></span>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                                <div class="exam-count"><?php echo e(number_format($exam->attempts)); ?> lượt</div>
+                            </article>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const activityLabels = <?php echo json_encode($activityLabels, 15, 512) ?>;
+        const activityData = <?php echo json_encode($activityData, 15, 512) ?>;
+
+        document.querySelectorAll('.skill-bar-fill').forEach((bar) => {
+            const width = Number(bar.dataset.width || 0);
+            requestAnimationFrame(() => {
+                bar.style.width = `${width}%`;
+            });
+        });
+
+        const canvas = document.getElementById('activityChart');
+
+        if (canvas) {
+            const chart = new Chart(canvas.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: activityLabels,
+                    datasets: [{
+                        label: 'Lượt nộp',
+                        data: activityData,
+                        borderWidth: 1,
+                        borderRadius: 8,
+                        backgroundColor: 'rgba(59, 130, 246, 0.16)',
+                        borderColor: '#2563eb',
+                        hoverBackgroundColor: 'rgba(59, 130, 246, 0.28)',
+                    }],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                        tooltip: {
+                            backgroundColor: '#2b1d17',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            padding: 12,
+                            displayColors: false,
+                        },
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false,
+                            },
+                            ticks: {
+                                color: '#8b6b5b',
+                                maxRotation: 0,
+                                autoSkip: false,
+                                callback: (value, index) => (index % 5 === 0 ? activityLabels[index] : ''),
+                            },
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0,
+                                color: '#8b6b5b',
+                            },
+                            grid: {
+                                color: 'rgba(147, 99, 75, 0.12)',
+                            },
+                        },
+                    },
+                },
+            });
+        }
+    </script>
+</body>
+</html>
+<?php /**PATH D:\english-learning\resources\views/instructor/stats/index.blade.php ENDPATH**/ ?>

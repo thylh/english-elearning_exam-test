@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Practice IELTS</title>
+    <title>Practice</title>
 
     @vite([
         'resources/css/english-for-you.css',
@@ -276,7 +276,7 @@
                                         <p>{{ 
                                                                                                                                                                                             Str::limit($exam->description ?? 'Không có mô tả', 120)
                                                                                                                                                                                         }}</p>
-                                        <a href="{{ route('exams.take', $exam) }}">Làm bài</a>
+                                        <a href="{{ route('exams.take', ['exam' => $exam, 'origin' => 'practice']) }}">Làm bài</a>
                                     </div>
                                 </div>
                             @endforeach

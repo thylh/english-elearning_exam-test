@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Speaking IELTS</title>
+    <title>Speaking</title>
 
     @vite([
         'resources/css/english-for-you.css',
@@ -57,7 +57,7 @@
 
                     <div class="reading-question" style="text-align: center; padding: 20px;">
                         <form id="exam-form">
-                            <input type="hidden" name="answers[speaking]" id="speaking-answer" value="">
+                            <input type="hidden" name="answers[{{ $questions->first()->id ?? 'speaking' }}]" id="speaking-answer" value="">
                             <input type="hidden" name="grading_method" id="grading-method" value="manual">
                         </form>
                         <div id="visualizer-container"
@@ -264,6 +264,7 @@
         const manualGradeBtn = document.getElementById('manual-grade-btn');
         const autoGradeBtn = document.getElementById('auto-grade-btn');
         const gradingMethodField = document.getElementById('grading-method');
+        const returnOrigin = '{{ $returnTarget ?? 'practice' }}';
 
         const duration = {{ $exam->duration_minutes ?? 30 }} * 60;
         let remaining = duration;
@@ -401,7 +402,7 @@
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
-                body: JSON.stringify({ answers, grading_method: gradingMethodValue })
+                body: JSON.stringify({ answers, grading_method: gradingMethodValue, origin: returnOrigin })
             });
             if (res.redirected) window.location = res.url;
             else {

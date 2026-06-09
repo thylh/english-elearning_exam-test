@@ -19,10 +19,8 @@
         <!-- LEFT -->
         <div class="hero-content">
 
-            <span class="hero-tag">
-
-                IELTS LEARNING WEBSITE
-
+            <span class="hero-tag" style="display: inline-block; transform: translateY(-100px);">
+                English Learning Website
             </span>
 
             <h1>
@@ -83,10 +81,10 @@
 
             <p>
 
-                English For You là website luyện tập IELTS
+                English For You là website luyện tập tiếng Anh
                 được xây dựng nhằm hỗ trợ sinh viên
                 và người học tiếng Anh tự luyện tập
-                4 kỹ năng IELTS.
+                4 kỹ năng.
 
             </p>
 
@@ -110,7 +108,7 @@
 
         <p>
             Nền tảng tự học Tiéng Anh
-            © 2026 English For You | IELTS Learning Website
+            © 2026 English For You | English Learning Website
 
         </p>
 
