@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Instructor;
+namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
 use App\Models\Submission;
@@ -36,7 +36,7 @@ class SubmissionController extends Controller
 
         $submissions = $query->paginate(20)->appends($request->query());
 
-        return view('instructor.submissions.index', compact('submissions', 'status', 'type'));
+        return view('teacher.submissions.index', compact('submissions', 'status', 'type'));
     }
 
     public function update(Request $request, Submission $submission)
@@ -70,7 +70,7 @@ class SubmissionController extends Controller
             }
         }
 
-        return redirect()->route('instructor.submissions.index', $request->only('status', 'type'))
+        return redirect()->route('teacher.submissions.index', $request->only('status', 'type'))
             ->with('success', 'Cập nhật điểm chấm thành công.');
     }
 }

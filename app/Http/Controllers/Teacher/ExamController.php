@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Instructor;
+namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -42,7 +42,7 @@ class ExamController extends Controller
             ->paginate(20)
             ->appends($request->query());
 
-        return view('instructor.exams.index', compact('exams', 'types', 'subtypes', 'skills', 'band'));
+        return view('teacher.exams.index', compact('exams', 'types', 'subtypes', 'skills', 'band'));
     }
 
     public function store(Request $request)
@@ -65,7 +65,7 @@ class ExamController extends Controller
             ]);
         }
 
-        return redirect()->route('instructor.exams.index')
+        return redirect()->route('teacher.exams.index')
             ->with('success', 'Exam created successfully.');
     }
 
@@ -88,14 +88,14 @@ class ExamController extends Controller
             ]);
         }
 
-        return redirect()->route('instructor.exams.index')
+        return redirect()->route('teacher.exams.index')
             ->with('success', 'Exam updated successfully.');
     }
 
     public function destroy(Exam $exam)
     {
         $exam->delete();
-        return redirect()->route('instructor.exams.index')
+        return redirect()->route('teacher.exams.index')
             ->with('success', 'Exam deleted.');
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Instructor;
+namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
 use App\Models\Exam;
@@ -131,7 +131,7 @@ class StatsController extends Controller
             $activityData[] = isset($dailyActivity[$dayKey]) ? (int) $dailyActivity[$dayKey]->attempts : 0;
         }
 
-        return view('instructor.stats.index', [
+        return view('teacher.stats.index', [
             'totalStudents' => $totalStudents,
             'totalExams' => $totalExams,
             'totalAttempts' => $totalAttempts,

@@ -43,7 +43,7 @@
         @include('partials.alert')
 
         <div class="d-flex justify-content-between align-items-center gap-3 mb-3 flex-wrap">
-            <a href="{{ route('instructor.exams.index') }}" class="btn btn-outline-secondary">
+            <a href="{{ route('teacher.exams.index') }}" class="btn btn-outline-secondary">
                 <i class="fa-solid fa-arrow-left"></i>
                 Quay lại danh sách đề
             </a>
@@ -103,12 +103,12 @@
                 <div id="createQuestionPanel" class="question-panel">
                     <h2>Thêm câu hỏi</h2>
 
-                    <form method="POST" action="{{ route('instructor.exams.questions.store', $exam) }}" id="createQuestionForm" class="question-form"
+                    <form method="POST" action="{{ route('teacher.exams.questions.store', $exam) }}" id="createQuestionForm" class="question-form"
                         enctype="multipart/form-data"
                         data-exam-type="{{ $exam->type }}" data-exam-subtype="{{ $exam->subtype }}" data-exam-skill="{{ $exam->skill }}">
                         @csrf
 
-                        @include('instructor.exams.questions.partials.form-fields', [
+                        @include('teacher.exams.questions.partials.form-fields', [
                             'exam' => $exam,
                             'question' => null,
                             'questionTypes' => $questionTypes,
@@ -138,7 +138,7 @@
                                 @endif
                                 <span class="badge text-bg-secondary">{{ $questionTypes[$question->question_type] ?? $question->question_type }}</span>
                             </div>
-                            <form method="POST" action="{{ route('instructor.exams.questions.destroy', [$exam, $question]) }}"
+                            <form method="POST" action="{{ route('teacher.exams.questions.destroy', [$exam, $question]) }}"
                                 onsubmit="return confirm('Xóa câu hỏi này?')">
                                 @csrf
                                 @method('DELETE')
@@ -148,13 +148,13 @@
                             </form>
                         </div>
 
-                        <form method="POST" action="{{ route('instructor.exams.questions.update', [$exam, $question]) }}" class="question-form"
+                        <form method="POST" action="{{ route('teacher.exams.questions.update', [$exam, $question]) }}" class="question-form"
                             enctype="multipart/form-data"
                             data-exam-type="{{ $exam->type }}" data-exam-subtype="{{ $exam->subtype }}" data-exam-skill="{{ $exam->skill }}">
                             @csrf
                             @method('PUT')
 
-                            @include('instructor.exams.questions.partials.form-fields', [
+                            @include('teacher.exams.questions.partials.form-fields', [
                                 'exam' => $exam,
                                 'question' => $question,
                                 'questionTypes' => $questionTypes,
@@ -277,7 +277,7 @@
             // }
         }
 
-        const questionTypeStorageKey = 'instructorExamLastQuestionType';
+        const questionTypeStorageKey = 'teacherExamLastQuestionType';
         let activeSkill = '{{ old('section_skill') }}' || null;
         let activePart = '{{ old('part_number') }}' || null;
 

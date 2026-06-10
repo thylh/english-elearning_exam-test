@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Instructor;
+namespace Tests\Feature\Teacher;
 
 use App\Models\Exam;
 use App\Models\ExamQuestion;
@@ -14,7 +14,7 @@ class ExamQuestionControllerTest extends TestCase
 
     public function test_practice_single_questions_are_forced_to_part_one_and_exam_skill(): void
     {
-        $user = User::factory()->create(['role' => 'instructor']);
+        $user = User::factory()->create(['role' => 'teacher']);
         $exam = Exam::query()->create([
             'title' => 'Reading Practice',
             'slug' => 'reading-practice',
@@ -24,7 +24,7 @@ class ExamQuestionControllerTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        $response = $this->actingAs($user)->post(route('instructor.exams.questions.store', $exam), [
+        $response = $this->actingAs($user)->post(route('teacher.exams.questions.store', $exam), [
             'question_text' => 'What is the main idea?',
             'question_type' => 'multiple_choice',
             'options_text' => "A\nB\nC\nD",
@@ -32,7 +32,7 @@ class ExamQuestionControllerTest extends TestCase
             'explanation' => 'Sample explanation',
         ]);
 
-        $response->assertRedirect(route('instructor.exams.questions.index', $exam));
+        $response->assertRedirect(route('teacher.exams.questions.index', $exam));
 
         $this->assertDatabaseHas('exam_questions', [
             'exam_id' => $exam->id,
@@ -44,7 +44,7 @@ class ExamQuestionControllerTest extends TestCase
 
     public function test_question_order_updates_other_questions_when_reordered(): void
     {
-        $user = User::factory()->create(['role' => 'instructor']);
+        $user = User::factory()->create(['role' => 'teacher']);
         $exam = Exam::query()->create([
             'title' => 'Reading Practice',
             'slug' => 'reading-practice-order',
@@ -72,13 +72,13 @@ class ExamQuestionControllerTest extends TestCase
             'order' => 2,
         ]);
 
-        $response = $this->actingAs($user)->put(route('instructor.exams.questions.update', [$exam, $question1]), [
+        $response = $this->actingAs($user)->put(route('teacher.exams.questions.update', [$exam, $question1]), [
             'question_text' => 'Question 1',
             'question_type' => 'text',
             'order' => 2,
         ]);
 
-        $response->assertRedirect(route('instructor.exams.questions.index', $exam));
+        $response->assertRedirect(route('teacher.exams.questions.index', $exam));
 
         $this->assertDatabaseHas('exam_questions', [
             'id' => $question1->id,

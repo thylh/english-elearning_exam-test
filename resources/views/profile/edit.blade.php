@@ -289,7 +289,7 @@
                         <h2 class="summary-name">{{ $user->name }}</h2>
                         <div class="summary-role">
                             <i class="fa-solid fa-id-badge"></i>
-                            {{ $user->role === 'instructor' ? 'Giảng viên' : 'Học viên' }}
+                            {{ $user->role === 'teacher' ? 'Giáo viên' : ($user->role === 'admin' ? 'Quản trị viên' : 'Học viên') }}
                         </div>
                     </div>
                 </div>

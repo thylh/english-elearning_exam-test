@@ -19,16 +19,25 @@
     <!-- MENU -->
     <nav class="menu">
         @auth
-            @if(Auth::user()->role === 'instructor')
-                <a href="/instructor/exams">
+            @if(Auth::user()->isAdmin())
+                <a href="{{ route('admin.overview') }}" class="{{ Request::is('admin*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    Bảng điều khiển
+                </a>
+                <a href="{{ route('admin.backup.page') }}">
+                    <i class="fa-solid fa-download"></i>
+                    Sao lưu dữ liệu
+                </a>
+            @elseif(Auth::user()->isTeacher())
+                <a href="/teacher/exams">
                     <i class="fa-solid fa-clipboard-list"></i>
                     Quản lý đề
                 </a>
-                <a href="{{ route('instructor.submissions.index') }}">
+                <a href="{{ route('teacher.submissions.index') }}">
                     <i class="fa-solid fa-clipboard-check"></i>
                     Chấm thi
                 </a>
-                <a href="{{ route('instructor.stats.index') }}" class="{{ Request::is('instructor/stats*') ? 'active' : '' }}">
+                <a href="{{ route('teacher.stats.index') }}" class="{{ Request::is('teacher/stats*') ? 'active' : '' }}">
                     <i class="fa-solid fa-chart-bar"></i>
                     Thống kê
                 </a>
@@ -59,8 +68,10 @@
         <!-- GREETING -->
         <div class="greeting">
             @auth
-                @if(Auth::user()->role === 'instructor')
-                    <span>Xin chào, giảng viên <strong>{{ Auth::user()->name }}</strong></span>
+                @if(Auth::user()->isAdmin())
+                    <span>Xin chào, admin <strong>{{ Auth::user()->name }}</strong></span>
+                @elseif(Auth::user()->isTeacher())
+                    <span>Xin chào, giáo viên <strong>{{ Auth::user()->name }}</strong></span>
                 @else
                     <span>Xin chào, học viên <strong>{{ Auth::user()->name }}</strong></span>
                 @endif
@@ -74,22 +85,40 @@
 
             <!-- DROPDOWN -->
             <div class="dropdown">
-                @if(Auth::user()->role === 'instructor')
-                    <a href="/dashboard">
-                        <i class="fa-solid fa-house"></i>
-                        Dashboard
+                @if(Auth::user()->isAdmin())
+                    <a href="{{ route('admin.overview') }}">
+                        <i class="fa-solid fa-chart-pie"></i>
+                        Bảng điều khiển
+                    </a>
+                    <a href="{{ route('admin.backup.page') }}">
+                        <i class="fa-solid fa-download"></i>
+                        Sao lưu dữ liệu
+                    </a>
+                @elseif(Auth::user()->isTeacher())
+                    <a href="/teacher/exams">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                        Quản lý đề
+                    </a>
+                    <a href="{{ route('teacher.stats.index') }}">
+                        <i class="fa-solid fa-chart-bar"></i>
+                        Thống kê
                     </a>
                 @else
                     <a href="/dashboard">
                         <i class="fa-solid fa-house"></i>
                         Dashboard
                     </a>
+                    <a href="{{ route('learning-results.index') }}">
+                        <i class="fa-solid fa-square-poll-vertical"></i>
+                        Kết quả học tập
+                    </a>
                 @endif
-
-                <a href="{{ route('profile.edit') }}">
-                    <i class="fa-solid fa-user-gear"></i>
-                    Hồ sơ cá nhân
-                </a>
+                @unless(Auth::user()->isAdmin())
+                    <a href="{{ route('profile.edit') }}">
+                        <i class="fa-solid fa-user-gear"></i>
+                        Hồ sơ cá nhân
+                    </a>
+                @endunless
 
                 <a href="{{ route('logout') }}"
                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

@@ -32,7 +32,7 @@
 
     <section class="hero">
         <div class="hero-content">
-            <span class="hero-tag">INSTRUCTOR DASHBOARD</span>
+            <span class="hero-tag">TEACHER DASHBOARD</span>
             {{-- <h1> Quản lý đề thi</h1> --}}
         </div>
     </section>
@@ -256,7 +256,7 @@
                 <button id="openCreateModal" type="button" class="btn btn-main">Tạo đề mới</button>
             </div>
 
-            <form method="GET" action="{{ route('instructor.exams.index') }}"
+            <form method="GET" action="{{ route('teacher.exams.index') }}"
                 class="exam-filter-panel {{ $filterOpen ? 'open' : '' }}" style="margin-bottom: 20px;">
                 <div class="filter-row">
                     <div class="filter-group">
@@ -298,7 +298,7 @@
 
                 <div class="filter-actions">
                     <button type="submit" class="btn btn-primary">Áp dụng lọc</button>
-                    <a href="{{ route('instructor.exams.index') }}" class="btn btn-outline-secondary">Xóa lọc</a>
+                    <a href="{{ route('teacher.exams.index') }}" class="btn btn-outline-secondary">Xóa lọc</a>
                 </div>
             </form>
 
@@ -312,7 +312,7 @@
                                         data-title="{{ e($exam->title) }}" data-description="{{ e($exam->description) }}"
                                         style="font-size:14px;padding:8px;" title="Sửa"><i
                                             class="fa-solid fa-pen-to-square"></i></button>
-                                    <form action="{{ route('instructor.exams.destroy', $exam) }}" method="POST"
+                                    <form action="{{ route('teacher.exams.destroy', $exam) }}" method="POST"
                                         class="d-inline-block">
                                         @csrf
                                         @method('DELETE')
@@ -332,7 +332,7 @@
                                         <p>{{ Str::limit($exam->description ?? 'Không có mô tả', 120) }}</p>
                                     </div>
                                     <div class="card-actions">
-                                        <a href="{{ route('instructor.exams.questions.index', $exam) }}"
+                                        <a href="{{ route('teacher.exams.questions.index', $exam) }}"
                                             class="btn btn-outline-secondary" style="font-size:12px;padding:6px 12px;">Quản lý câu
                                             hỏi</a>
                                         <button type="button" class="btn btn-outline-primary classify-btn" data-id="{{ $exam->id }}"
@@ -468,7 +468,7 @@
                 function openCreateModal() {
                     createEditModalLabel.textContent = 'Tạo đề mới';
                     editMethod.value = 'POST';
-                    createEditForm.action = '/instructor/exams';
+                    createEditForm.action = '/teacher/exams';
                     editTitle.value = '';
                     editDescription.value = '';
                     createEditModal.show();
@@ -477,7 +477,7 @@
                 function openEditModal(id, title, description) {
                     createEditModalLabel.textContent = 'Sửa đề';
                     editMethod.value = 'PUT';
-                    createEditForm.action = `/instructor/exams/${id}`;
+                    createEditForm.action = `/teacher/exams/${id}`;
                     editTitle.value = title;
                     editDescription.value = description;
                     createEditModal.show();
@@ -584,7 +584,7 @@
                     const examId = document.getElementById('examId').value;
                     const formData = new FormData(this);
 
-                    fetch(`/instructor/exams/${examId}/classify`, {
+                    fetch(`/teacher/exams/${examId}/classify`, {
                         method: 'POST',
                         headers: {
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
@@ -621,7 +621,7 @@
                             formData.append('_method', 'PATCH');
                             formData.append('published', isPublished ? 0 : 1);
 
-                            fetch(`/instructor/exams/${examId}/publish`, {
+                            fetch(`/teacher/exams/${examId}/publish`, {
                                 method: 'POST',
                                 headers: {
                                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,

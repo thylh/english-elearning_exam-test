@@ -79,4 +79,19 @@ class User extends Authenticatable
     {
         return $this->hasMany(Submission::class);
     }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isTeacher(): bool
+    {
+        return in_array($this->role, ['teacher', 'instructor'], true);
+    }
+
+    public function isStudent(): bool
+    {
+        return $this->role === 'student';
+    }
 }

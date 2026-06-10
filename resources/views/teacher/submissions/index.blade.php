@@ -50,11 +50,11 @@
                 <span class="submissions-filter-label">
                     <i class="fa-solid fa-filter"></i> Trạng thái:
                 </span>
-                <a href="{{ route('instructor.submissions.index', ['status' => 'pending', 'type' => $type]) }}"
+                <a href="{{ route('teacher.submissions.index', ['status' => 'pending', 'type' => $type]) }}"
                    class="submissions-filter-btn {{ $status === 'pending' ? 'active' : '' }}">
                     <i class="fa-solid fa-clock"></i> Chờ chấm
                 </a>
-                <a href="{{ route('instructor.submissions.index', ['status' => 'graded', 'type' => $type]) }}"
+                <a href="{{ route('teacher.submissions.index', ['status' => 'graded', 'type' => $type]) }}"
                    class="submissions-filter-btn {{ $status === 'graded' ? 'active' : '' }}">
                     <i class="fa-solid fa-check-circle"></i> Đã chấm
                 </a>
@@ -62,15 +62,15 @@
                 <div class="submissions-filter-divider"></div>
 
                 <span class="submissions-filter-label">Loại:</span>
-                <a href="{{ route('instructor.submissions.index', ['status' => $status, 'type' => 'all']) }}"
+                <a href="{{ route('teacher.submissions.index', ['status' => $status, 'type' => 'all']) }}"
                    class="submissions-filter-btn {{ $type === 'all' ? 'active' : '' }}">
                     <i class="fa-solid fa-layer-group"></i> Tất cả
                 </a>
-                <a href="{{ route('instructor.submissions.index', ['status' => $status, 'type' => 'writing']) }}"
+                <a href="{{ route('teacher.submissions.index', ['status' => $status, 'type' => 'writing']) }}"
                    class="submissions-filter-btn {{ $type === 'writing' ? 'active-writing' : '' }}">
                     <i class="fa-solid fa-pen-nib"></i> Writing
                 </a>
-                <a href="{{ route('instructor.submissions.index', ['status' => $status, 'type' => 'speaking']) }}"
+                <a href="{{ route('teacher.submissions.index', ['status' => $status, 'type' => 'speaking']) }}"
                    class="submissions-filter-btn {{ $type === 'speaking' ? 'active-speaking' : '' }}">
                     <i class="fa-solid fa-microphone-lines"></i> Speaking
                 </a>
@@ -193,7 +193,7 @@
                             <i class="fa-solid fa-pen-to-square"></i>
                             {{ $sub->status === 'graded' ? 'Cập nhật điểm' : 'Chấm điểm thủ công' }}
                         </div>
-                        <form action="{{ route('instructor.submissions.update', $sub->id) }}" method="POST">
+                        <form action="{{ route('teacher.submissions.update', $sub->id) }}" method="POST">
                             @csrf
                             @method('PATCH')
                             <input type="hidden" name="status" value="{{ $status }}">

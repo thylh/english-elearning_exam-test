@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Instructor;
+namespace Tests\Feature\Teacher;
 
 use App\Models\Exam;
 use App\Models\User;
@@ -13,7 +13,7 @@ class ExamClassificationTest extends TestCase
 
     public function test_classify_infers_practice_when_type_is_missing_but_practice_fields_are_present(): void
     {
-        $user = User::factory()->create(['role' => 'instructor']);
+        $user = User::factory()->create(['role' => 'teacher']);
         $exam = Exam::query()->create([
             'title' => 'Mock Exam',
             'slug' => 'mock-exam',
@@ -21,7 +21,7 @@ class ExamClassificationTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        $response = $this->actingAs($user)->patchJson(route('instructor.exams.classify', $exam), [
+        $response = $this->actingAs($user)->patchJson(route('teacher.exams.classify', $exam), [
             'subtype' => 'single',
             'skill' => 'reading',
             'category' => 'IELTS',
@@ -41,7 +41,7 @@ class ExamClassificationTest extends TestCase
 
     public function test_classify_clears_practice_fields_for_exam_type(): void
     {
-        $user = User::factory()->create(['role' => 'instructor']);
+        $user = User::factory()->create(['role' => 'teacher']);
         $exam = Exam::query()->create([
             'title' => 'Mock Exam 2',
             'slug' => 'mock-exam-2',
@@ -51,7 +51,7 @@ class ExamClassificationTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        $response = $this->actingAs($user)->patchJson(route('instructor.exams.classify', $exam), [
+        $response = $this->actingAs($user)->patchJson(route('teacher.exams.classify', $exam), [
             'type' => 'exam',
             'subtype' => 'single',
             'skill' => 'reading',

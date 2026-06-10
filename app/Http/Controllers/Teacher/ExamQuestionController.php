@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Instructor;
+namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
 use App\Models\Exam;
@@ -20,7 +20,7 @@ class ExamQuestionController extends Controller
             ->orderBy('order')
             ->get();
 
-        return view('instructor.exams.questions.index', compact('exam', 'questions'));
+        return view('teacher.exams.questions.index', compact('exam', 'questions'));
     }
 
     public function store(Request $request, Exam $exam)
@@ -38,7 +38,7 @@ class ExamQuestionController extends Controller
         $exam->questions()->create($data);
 
         return redirect()
-            ->route('instructor.exams.questions.index', $exam)
+            ->route('teacher.exams.questions.index', $exam)
             ->with('success', 'Đã thêm câu hỏi.')
             ->withInput($request->only('section_skill', 'part_number'));
     }
@@ -69,7 +69,7 @@ class ExamQuestionController extends Controller
         $question->update($data);
 
         return redirect()
-            ->route('instructor.exams.questions.index', $exam)
+            ->route('teacher.exams.questions.index', $exam)
             ->with('success', 'Đã cập nhật câu hỏi.')
             ->withInput($request->only('section_skill', 'part_number'));
     }
@@ -81,7 +81,7 @@ class ExamQuestionController extends Controller
         $question->delete();
 
         return redirect()
-            ->route('instructor.exams.questions.index', $exam)
+            ->route('teacher.exams.questions.index', $exam)
             ->with('success', 'Đã xóa câu hỏi.');
     }
 
