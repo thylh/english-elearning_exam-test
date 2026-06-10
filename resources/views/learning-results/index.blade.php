@@ -48,6 +48,10 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            min-height: 220px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .skill-card:hover {
@@ -107,18 +111,28 @@
             margin-bottom: 15px;
             display: flex;
             align-items: baseline;
-            gap: 5px;
+            gap: 8px;
+            flex-wrap: wrap;
+            min-height: 3.2rem;
         }
 
-        .skill-score span {
+        .skill-score .score-suffix,
+        .skill-score .score-label {
             font-size: 1rem;
             font-weight: 500;
             color: #8d6e63;
         }
 
+        .skill-score .score-label {
+            display: inline-flex;
+            align-items: center;
+            margin-left: 5px;
+        }
+
         .skill-progress-container {
             width: 100%;
-            height: 8px;
+            height: 10px;
+            margin-top: 14px;
             background: #f5ebe1;
             border-radius: 999px;
             overflow: hidden;
@@ -310,10 +324,25 @@
             text-transform: uppercase;
         }
 
-        .skill-badge.reading { background: #eff6ff; color: #1e40af; }
-        .skill-badge.listening { background: #ecfdf5; color: #065f46; }
-        .skill-badge.writing { background: #fffbeb; color: #92400e; }
-        .skill-badge.speaking { background: #fdf2f8; color: #9d174d; }
+        .skill-badge.reading {
+            background: #eff6ff;
+            color: #1e40af;
+        }
+
+        .skill-badge.listening {
+            background: #ecfdf5;
+            color: #065f46;
+        }
+
+        .skill-badge.writing {
+            background: #fffbeb;
+            color: #92400e;
+        }
+
+        .skill-badge.speaking {
+            background: #fdf2f8;
+            color: #9d174d;
+        }
 
         .status-badge {
             display: inline-block;
@@ -399,9 +428,11 @@
                     <div class="skill-title">{{ $info['label'] }}</div>
                     <div class="skill-score">
                         @if($hasScore)
-                            {{ $scoreValue }}<span>/100</span>
+                            <span>{{ $scoreValue }}</span>
+                            <span class="score-suffix">/100</span>
                         @else
-                            --<span>Chưa làm</span>
+                            <span>--</span>
+                            <span class="score-label">Chưa làm</span>
                         @endif
                     </div>
                     <div class="skill-progress-container">
@@ -454,25 +485,42 @@
                     <i class="fa-solid fa-lightbulb"></i>
                     Đề Xuất Học Tập
                 </div>
-                <div style="background: #fffcf9; border: 1px solid #f5ebe1; padding: 25px; border-radius: 16px; height: calc(100% - 45px); box-sizing: border-box; line-height: 1.7; color: #5d4037;">
+                <div
+                    style="background: #fffcf9; border: 1px solid #f5ebe1; padding: 25px; border-radius: 16px; height: calc(100% - 45px); box-sizing: border-box; line-height: 1.7; color: #5d4037;">
                     @if($totalTests === 0)
-                        <p>Bạn chưa hoàn thành bài làm thử nào trên hệ thống. Hãy bắt đầu bằng cách truy cập trang <strong>Practice</strong> hoặc <strong>Exam test</strong> ở thanh menu để làm bài đầu tiên, hệ thống sẽ dựa vào đó để đề xuất lộ trình ôn tập cụ thể cho bạn.</p>
+                        <p>Bạn chưa hoàn thành bài làm thử nào trên hệ thống. Hãy bắt đầu bằng cách truy cập trang
+                            <strong>Practice</strong> hoặc <strong>Exam test</strong> ở thanh menu để làm bài đầu tiên, hệ thống
+                            sẽ dựa vào đó để đề xuất lộ trình ôn tập cụ thể cho bạn.</p>
                     @else
                         @php
                             $hasReadingOrListeningWeak = in_array('Reading', $weaknesses) || in_array('Listening', $weaknesses);
                             $hasWritingOrSpeakingWeak = in_array('Writing', $weaknesses) || in_array('Speaking', $weaknesses);
                         @endphp
-                        
+
                         @if(count($strengths) === 4)
-                            <p><i class="fa-solid fa-trophy" style="color: #f59e0b; margin-right: 6px;"></i> <strong>Tuyệt vời!</strong> Bạn đang duy trì phong độ cực kỳ ấn tượng ở cả 4 kỹ năng. Để tối ưu hóa điểm số và sẵn sàng cho kỳ thi thực tế, hãy làm thêm nhiều đề thi trọn bộ (Full Test) tại mục <strong>Exam test</strong> để rèn luyện khả năng quản lý thời gian và chịu đựng áp lực phòng thi tốt hơn.</p>
+                            <p><i class="fa-solid fa-trophy" style="color: #f59e0b; margin-right: 6px;"></i> <strong>Tuyệt
+                                    vời!</strong> Bạn đang duy trì phong độ cực kỳ ấn tượng ở cả 4 kỹ năng. Để tối ưu hóa điểm số và
+                                sẵn sàng cho kỳ thi thực tế, hãy làm thêm nhiều đề thi trọn bộ (Full Test) tại mục <strong>Exam
+                                    test</strong> để rèn luyện khả năng quản lý thời gian và chịu đựng áp lực phòng thi tốt hơn.</p>
                         @elseif($hasWritingOrSpeakingWeak && $hasReadingOrListeningWeak)
-                            <p>Kết quả cho thấy bạn cần cải thiện điểm số ở cả nhóm kỹ năng làm bài trắc nghiệm (Reading/Listening) lẫn kỹ năng chủ động (Writing/Speaking). Khuyên bạn nên chia nhỏ thời gian học: ưu tiên ôn luyện từ vựng và cấu trúc ngữ pháp thông qua Reading/Listening trước, sau đó áp dụng trực tiếp vào các đề viết và nói ngắn tại mục <strong>Practice</strong>.</p>
+                            <p>Kết quả cho thấy bạn cần cải thiện điểm số ở cả nhóm kỹ năng làm bài trắc nghiệm (Reading/Listening)
+                                lẫn kỹ năng chủ động (Writing/Speaking). Khuyên bạn nên chia nhỏ thời gian học: ưu tiên ôn luyện từ
+                                vựng và cấu trúc ngữ pháp thông qua Reading/Listening trước, sau đó áp dụng trực tiếp vào các đề
+                                viết và nói ngắn tại mục <strong>Practice</strong>.</p>
                         @elseif($hasWritingOrSpeakingWeak)
-                            <p>Các kỹ năng chủ động (Writing/Speaking) của bạn hiện đang có điểm số thấp hơn các kỹ năng nghe đọc. Đây là điều thường gặp đối với người tự học. Hãy tận dụng tối đa tính năng <strong>Chấm điểm tự động bằng AI</strong> khi làm bài nói và viết để nhận được nhận xét chi tiết ngay lập tức, hoặc gửi bài cho giảng viên để nhận được sửa lỗi thủ công chuẩn xác.</p>
+                            <p>Các kỹ năng chủ động (Writing/Speaking) của bạn hiện đang có điểm số thấp hơn các kỹ năng nghe đọc.
+                                Đây là điều thường gặp đối với người tự học. Hãy tận dụng tối đa tính năng <strong>Chấm điểm tự động
+                                    bằng AI</strong> khi làm bài nói và viết để nhận được nhận xét chi tiết ngay lập tức, hoặc gửi
+                                bài cho giảng viên để nhận được sửa lỗi thủ công chuẩn xác.</p>
                         @elseif($hasReadingOrListeningWeak)
-                            <p>Kỹ năng Nghe hoặc Đọc của bạn cần được cải thiện thêm. Hãy dành tối thiểu 30 phút mỗi ngày để luyện tập các bài lẻ tại mục <strong>Practice</strong>. Tập trung rèn luyện các kỹ năng đọc lướt (Skimming), quét thông tin (Scanning) và nhận diện các từ đồng nghĩa (Paraphrasing) để làm bài nhanh và chuẩn xác hơn.</p>
+                            <p>Kỹ năng Nghe hoặc Đọc của bạn cần được cải thiện thêm. Hãy dành tối thiểu 30 phút mỗi ngày để luyện
+                                tập các bài lẻ tại mục <strong>Practice</strong>. Tập trung rèn luyện các kỹ năng đọc lướt
+                                (Skimming), quét thông tin (Scanning) và nhận diện các từ đồng nghĩa (Paraphrasing) để làm bài nhanh
+                                và chuẩn xác hơn.</p>
                         @else
-                            <p>Bạn đang có tiến trình học tập rất tốt! Để bứt phá lên các điểm cao hơn (70+/100), hãy tập trung nghiên cứu kỹ các lỗi sai của mình thông qua tính năng <strong>Xem lại chi tiết bài làm</strong> lịch sử phía dưới. Việc hiểu rõ tại sao mình chọn sai sẽ giúp bạn tiến bộ nhanh gấp đôi.</p>
+                            <p>Bạn đang có tiến trình học tập rất tốt! Để bứt phá lên các điểm cao hơn (70+/100), hãy tập trung
+                                nghiên cứu kỹ các lỗi sai của mình thông qua tính năng <strong>Xem lại chi tiết bài làm</strong>
+                                lịch sử phía dưới. Việc hiểu rõ tại sao mình chọn sai sẽ giúp bạn tiến bộ nhanh gấp đôi.</p>
                         @endif
                     @endif
                 </div>
