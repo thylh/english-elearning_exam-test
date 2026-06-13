@@ -62,7 +62,7 @@ class LoginController extends Controller
             $redirect = match (true) {
                 Auth::user()->isAdmin() => route('admin.overview'),
                 Auth::user()->isTeacher() => route('teacher.exams.index'),
-                default => route('dashboard'),
+                default => url('/dashboard'),
             };
 
             return response()->json([

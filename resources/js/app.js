@@ -173,12 +173,14 @@ if (loginForm) {
 
                 console.error(error);
 
+                const message = error.response?.data?.message || 'Something went wrong';
+
                 if (alertBox) {
 
                     alertBox.innerHTML = `
                         <div class="alert alert-danger auto-hide-alert alert-dismissible fade show" role="alert">
                             <i class="fa-solid fa-circle-xmark me-2"></i>
-                            Something went wrong
+                            ${message}
                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
                     `;

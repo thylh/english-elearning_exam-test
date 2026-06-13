@@ -95,13 +95,13 @@
                         Sao lưu dữ liệu
                     </a>
                 @elseif(Auth::user()->isTeacher())
-                    <a href="/teacher/exams">
-                        <i class="fa-solid fa-clipboard-list"></i>
-                        Quản lý đề
+                    <a href="/practice">
+                        <i class="fa-solid fa-book"></i>
+                        Practice
                     </a>
-                    <a href="{{ route('teacher.stats.index') }}">
-                        <i class="fa-solid fa-chart-bar"></i>
-                        Thống kê
+                    <a href="/exam-test">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                        Exam test
                     </a>
                 @else
                     <a href="/dashboard">

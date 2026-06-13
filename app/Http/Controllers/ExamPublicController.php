@@ -56,8 +56,16 @@ class ExamPublicController extends Controller
             }
         }
 
-        // For non-skill exams (full tests) show the exam listing or fallback to practice view with the single exam
-        if ($exam->type === 'exam') {
+        // For full exams without an explicit skill, render the first section's question page if available.
+        if ($exam->type === 'exam' && $questions->isNotEmpty()) {
+            $firstSectionSkill = $questions->first()->section_skill;
+            if ($firstSectionSkill && in_array($firstSectionSkill, $allowed, true)) {
+                $view = 'ielts.' . $firstSectionSkill . '-question';
+                if (view()->exists($view)) {
+                    return view($view, compact('exam', 'questions', 'returnTarget', 'returnUrl'));
+                }
+            }
+
             return view('ielts.exam', ['exams' => collect([$exam]), 'returnTarget' => $returnTarget, 'returnUrl' => $returnUrl]);
         }
 

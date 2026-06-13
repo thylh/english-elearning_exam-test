@@ -45,7 +45,7 @@ Route::get('/dashboard', function () {
     }
 
     return view('dashboard');
-})->middleware('auth');
+})->middleware('auth')->name('dashboard');
 
 Route::middleware(['auth', 'role:student,teacher,instructor'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
